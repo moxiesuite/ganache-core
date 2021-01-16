@@ -41,7 +41,7 @@ describe("Mining", function() {
   beforeEach("checkpoint, so that we can revert later", async function() {
     let res = await pify(web3.currentProvider.send)({
       jsonrpc: "2.0",
-      method: "evm_snapshot",
+      method: "vvm_snapshot",
       id: new Date().getTime()
     });
 
@@ -51,7 +51,7 @@ describe("Mining", function() {
   afterEach("revert back to checkpoint", async function() {
     await pify(web3.currentProvider.send)({
       jsonrpc: "2.0",
-      method: "evm_revert",
+      method: "vvm_revert",
       params: [snapshotId],
       id: new Date().getTime()
     });
@@ -59,7 +59,7 @@ describe("Mining", function() {
 
   // Everything's a Promise to add in readibility.
   async function getBlockNumber() {
-    return to.number(await web3.eth.getBlockNumber());
+    return to.number(await web3.vap.getBlockNumber());
   }
 
   async function startMining() {
@@ -82,7 +82,7 @@ describe("Mining", function() {
   async function checkMining() {
     let response = await pify(web3.currentProvider.send)({
       jsonrpc: "2.0",
-      method: "eth_mining",
+      method: "vap_mining",
       id: new Date().getTime()
     });
 
@@ -92,7 +92,7 @@ describe("Mining", function() {
   async function mineSingleBlock() {
     let result = await pify(web3.currentProvider.send)({
       jsonrpc: "2.0",
-      method: "evm_mine",
+      method: "vvm_mine",
       id: new Date().getTime()
     });
     assert.deepStrictEqual(result.result, "0x0");
@@ -101,7 +101,7 @@ describe("Mining", function() {
   async function queueTransaction(from, to, gasLimit, value, data) {
     let response = await pify(web3.currentProvider.send)({
       jsonrpc: "2.0",
-      method: "eth_sendTransaction",
+      method: "vap_sendTransaction",
       id: new Date().getTime(),
       params: [
         {
@@ -120,7 +120,7 @@ describe("Mining", function() {
   }
 
   async function getCode(address) {
-    return web3.eth.getCode(address);
+    return web3.vap.getCode(address);
   }
 
   function compileSolidity(source) {
@@ -131,24 +131,24 @@ describe("Mining", function() {
   }
 
   before(async function() {
-    accounts = await web3.eth.getAccounts();
+    accounts = await web3.vap.getAccounts();
   });
 
   it("should mine a single block with two queued transactions", async function() {
     await stopMining();
     let blockNumber = await getBlockNumber();
 
-    let tx1 = await queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(2), "ether"));
-    let receipt1 = await web3.eth.getTransactionReceipt(tx1);
+    let tx1 = await queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(2), "vapor"));
+    let receipt1 = await web3.vap.getTransactionReceipt(tx1);
     assert.strictEqual(receipt1, null);
 
-    let tx2 = await queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(3), "ether"));
-    let receipt2 = await web3.eth.getTransactionReceipt(tx2);
+    let tx2 = await queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(3), "vapor"));
+    let receipt2 = await web3.vap.getTransactionReceipt(tx2);
     assert.strictEqual(receipt2, null);
 
     await startMining();
 
-    let receipts = await Promise.all([web3.eth.getTransactionReceipt(tx1), web3.eth.getTransactionReceipt(tx2)]);
+    let receipts = await Promise.all([web3.vap.getTransactionReceipt(tx1), web3.vap.getTransactionReceipt(tx2)]);
 
     assert.strictEqual(receipts.length, 2);
 
@@ -174,17 +174,17 @@ describe("Mining", function() {
     await stopMining();
     let blockNumber = await getBlockNumber();
 
-    let tx1 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "ether"));
-    let receipt1 = await web3.eth.getTransactionReceipt(tx1);
+    let tx1 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "vapor"));
+    let receipt1 = await web3.vap.getTransactionReceipt(tx1);
     assert.strictEqual(receipt1, null);
 
-    let tx2 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "ether"));
-    let receipt2 = await web3.eth.getTransactionReceipt(tx2);
+    let tx2 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "vapor"));
+    let receipt2 = await web3.vap.getTransactionReceipt(tx2);
     assert.strictEqual(receipt2, null);
 
     await startMining();
 
-    let receipts = await Promise.all([web3.eth.getTransactionReceipt(tx1), web3.eth.getTransactionReceipt(tx2)]);
+    let receipts = await Promise.all([web3.vap.getTransactionReceipt(tx1), web3.vap.getTransactionReceipt(tx2)]);
 
     assert.strictEqual(receipts.length, 2);
 
@@ -213,17 +213,17 @@ describe("Mining", function() {
 
       await stopMining();
       let blockNumber = await getBlockNumber();
-      let tx1 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "ether"));
-      let receipt1 = await web3.eth.getTransactionReceipt(tx1);
+      let tx1 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "vapor"));
+      let receipt1 = await web3.vap.getTransactionReceipt(tx1);
       assert.strictEqual(receipt1, null);
 
-      let tx2 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "ether"));
-      let receipt2 = await web3.eth.getTransactionReceipt(tx2);
+      let tx2 = await queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "vapor"));
+      let receipt2 = await web3.vap.getTransactionReceipt(tx2);
       assert.strictEqual(receipt2, null);
 
       await mineSingleBlock();
 
-      let receipts = await Promise.all([web3.eth.getTransactionReceipt(tx1), web3.eth.getTransactionReceipt(tx2)]);
+      let receipts = await Promise.all([web3.vap.getTransactionReceipt(tx1), web3.vap.getTransactionReceipt(tx2)]);
 
       assert.strictEqual(receipts.length, 2);
 
@@ -240,7 +240,7 @@ describe("Mining", function() {
   it("should error if queued transaction exceeds the block gas limit", async function() {
     try {
       await stopMining();
-      await queueTransaction(accounts[0], accounts[1], 10000000, web3.utils.toWei(new BN(2), "ether"));
+      await queueTransaction(accounts[0], accounts[1], 10000000, web3.utils.toWei(new BN(2), "vapor"));
       assert.fail("Transaction was processed without erroring; gas limit should have been too high");
     } catch (err) {
       // We caught an error like we expected. Ensure it's the right error, or rethrow.
@@ -255,7 +255,7 @@ describe("Mining", function() {
       await startMining();
       await queueTransaction(accounts[0], null, 3141592, 0, badBytecode);
       // This transaction should be processed immediately.
-      assert.fail("Execution should never get here as we expected `eth_sendTransaction` to throw an error");
+      assert.fail("Execution should never get here as we expected `vap_sendTransaction` to throw an error");
     } catch (err) {
       if (err.message.indexOf("VM Exception while processing transaction") !== 0) {
         assert.fail("Received error we didn't expect: " + err);
@@ -263,12 +263,12 @@ describe("Mining", function() {
     }
   });
 
-  it("should error via evm_mine when queued transaction throws a runtime errors", async function() {
+  it("should error via vvm_mine when queued transaction throws a runtime errors", async function() {
     try {
       await stopMining();
       await queueTransaction(accounts[0], null, 3141592, 0, badBytecode);
       await mineSingleBlock();
-      assert.fail("Execution should never get here as we expected `evm_mine` to throw an error");
+      assert.fail("Execution should never get here as we expected `vvm_mine` to throw an error");
     } catch (err) {
       if (err.message.indexOf("VM Exception while processing transaction") !== 0) {
         assert.fail("Received error we didn't expect: " + err);
@@ -276,7 +276,7 @@ describe("Mining", function() {
     }
   });
 
-  it("should error via evm_mine when multiple queued transactions throw runtime errors in a single block", async() => {
+  it("should error via vvm_mine when multiple queued transactions throw runtime errors in a single block", async() => {
     // Note: The two transactions queued in this test do not exceed the block gas limit
     // and thus should fit within a single block.
 
@@ -285,7 +285,7 @@ describe("Mining", function() {
       await queueTransaction(accounts[0], null, 1000000, 0, badBytecode);
       await queueTransaction(accounts[0], null, 1000000, 0, badBytecode);
       await mineSingleBlock();
-      assert.fail("Execution should never get here as we expected `evm_mine` to throw an error");
+      assert.fail("Execution should never get here as we expected `vvm_mine` to throw an error");
     } catch (err) {
       if (err.message.indexOf("Multiple VM Exceptions while processing transactions") !== 0) {
         assert.fail("Received error we didn't expect: " + err);
@@ -330,7 +330,7 @@ describe("Mining", function() {
       }
 
       // We got the error we wanted. Now check to see if the transaction was processed correctly.
-      let receiptTx2 = await web3.eth.getTransactionReceipt(tx2);
+      let receiptTx2 = await web3.vap.getTransactionReceipt(tx2);
 
       // We should have a receipt for the second transaction - it should have been processed.
       assert.notStrictEqual(receiptTx2, null);
@@ -347,7 +347,7 @@ describe("Mining", function() {
     }
   });
 
-  it("should return the correct value for eth_mining when miner started and stopped", async function() {
+  it("should return the correct value for vap_mining when miner started and stopped", async function() {
     await stopMining();
     let isMining = await checkMining();
     assert(!isMining);
@@ -367,10 +367,10 @@ describe("Mining", function() {
       // duck punch provider.send so we can detect when it is called
       const send = provider.send;
       provider.send = function(payload) {
-        if (payload.method === "evm_mine") {
+        if (payload.method === "vvm_mine") {
           if (closed) {
             clearTimeout(timer);
-            assert.fail("evm_mine after provider closed");
+            assert.fail("vvm_mine after provider closed");
           } else if (!closing) {
             closing = true;
             close(provider, () => {
@@ -385,19 +385,19 @@ describe("Mining", function() {
       };
     }
 
-    it("should stop mining when the provider is stopped during an evm_mine (same REPL)", (done) => {
+    it("should stop mining when the provider is stopped during an vvm_mine (same REPL)", (done) => {
       setUp(function(provider, callback) {
         provider.close(callback);
       }, done);
     });
 
-    it("should stop mining when the provider is stopped during evm_mine (next tick)", (done) => {
+    it("should stop mining when the provider is stopped during vvm_mine (next tick)", (done) => {
       setUp(function(provider, callback) {
         process.nextTick(() => provider.close(callback));
       }, done);
     });
 
-    it("should stop mining when the provider is stopped during evm_mine (setImmediate)", (done) => {
+    it("should stop mining when the provider is stopped during vvm_mine (setImmediate)", (done) => {
       setUp(function(provider, callback) {
         setImmediate(() => provider.close(callback));
       }, done);

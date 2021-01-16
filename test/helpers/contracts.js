@@ -12,17 +12,17 @@ async function compileAndDeploy(contractPath, contractName, web3) {
   let bytecode = "0x" + result.contracts[`${contractFilename}:${contractName}`].bytecode;
   let abi = JSON.parse(result.contracts[`${contractFilename}:${contractName}`].interface);
 
-  let contract = new web3.eth.Contract(abi);
+  let contract = new web3.vap.Contract(abi);
 
-  let accounts = await web3.eth.getAccounts();
-  let block = await web3.eth.getBlock("latest");
+  let accounts = await web3.vap.getAccounts();
+  let block = await web3.vap.getBlock("latest");
   let gasLimit = block.gasLimit;
 
   let instance = await contract.deploy({ data: bytecode }).send({ from: accounts[0], gas: gasLimit });
 
   // TODO: ugly workaround - not sure why this is necessary.
   if (!instance._requestManager.provider) {
-    instance._requestManager.setProvider(web3.eth._provider);
+    instance._requestManager.setProvider(web3.vap._provider);
   }
 
   return {

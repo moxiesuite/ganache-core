@@ -17,7 +17,7 @@ describe("options:gasLimit", function() {
 
   it("should respect the assigned gasLimit", async function() {
     let assignedGasLimit = provider.engine.manager.state.blockchain.blockGasLimit;
-    let block = await web3.eth.getBlock("latest");
+    let block = await web3.vap.getBlock("latest");
     assert.deepStrictEqual(block.gasLimit, to.number(assignedGasLimit));
   });
 });

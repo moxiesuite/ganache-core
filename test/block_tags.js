@@ -47,7 +47,7 @@ describe("Block Tags", function() {
   var initial = {};
 
   before("Gather accounts", function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) {
         return done(err);
       }
@@ -57,7 +57,7 @@ describe("Block Tags", function() {
   });
 
   before("Get initial block number", function(done) {
-    web3.eth.getBlockNumber(function(err, n) {
+    web3.vap.getBlockNumber(function(err, n) {
       if (err) {
         return done(err);
       }
@@ -69,8 +69,8 @@ describe("Block Tags", function() {
   before("Get initial balance and nonce", function(done) {
     async.parallel(
       {
-        balance: web3.eth.getBalance.bind(web3.eth, accounts[0]),
-        nonce: web3.eth.getTransactionCount.bind(web3.eth, accounts[0])
+        balance: web3.vap.getBalance.bind(web3.vap, accounts[0]),
+        nonce: web3.vap.getTransactionCount.bind(web3.vap, accounts[0])
       },
       function(err, result) {
         if (err) {
@@ -84,7 +84,7 @@ describe("Block Tags", function() {
   });
 
   before("Make transaction that changes balance, nonce and code", function(done) {
-    web3.eth.sendTransaction(
+    web3.vap.sendTransaction(
       {
         from: accounts[0],
         data: contract.binary,
@@ -95,7 +95,7 @@ describe("Block Tags", function() {
           return done(err);
         }
 
-        web3.eth.getTransactionReceipt(tx, function(err, receipt) {
+        web3.vap.getTransactionReceipt(tx, function(err, receipt) {
           if (err) {
             return done(err);
           }
@@ -108,14 +108,14 @@ describe("Block Tags", function() {
   });
 
   it("should return the initial nonce at the previous block number", function(done) {
-    web3.eth.getTransactionCount(accounts[0], initialBlockNumber, function(err, nonce) {
+    web3.vap.getTransactionCount(accounts[0], initialBlockNumber, function(err, nonce) {
       if (err) {
         return done(err);
       }
       assert.strictEqual(nonce, initial.nonce);
 
       // Check that the nonce incremented with the block number, just to be sure.
-      web3.eth.getTransactionCount(accounts[0], initialBlockNumber + 1, function(err, nonce) {
+      web3.vap.getTransactionCount(accounts[0], initialBlockNumber + 1, function(err, nonce) {
         if (err) {
           return done(err);
         }
@@ -126,34 +126,34 @@ describe("Block Tags", function() {
   });
 
   it("should return the initial balance at the previous block number", function(done) {
-    web3.eth.getBalance(accounts[0], initialBlockNumber, function(err, balance) {
+    web3.vap.getBalance(accounts[0], initialBlockNumber, function(err, balance) {
       if (err) {
         return done(err);
       }
       assert.strictEqual(balance, initial.balance);
 
       // Check that the balance incremented with the block number, just to be sure.
-      web3.eth.getBalance(accounts[0], initialBlockNumber + 1, function(err, balance) {
+      web3.vap.getBalance(accounts[0], initialBlockNumber + 1, function(err, balance) {
         if (err) {
           return done(err);
         }
-        var initialBalanceInEther = parseFloat(web3.utils.fromWei(initial.balance, "ether"));
-        var balanceInEther = parseFloat(web3.utils.fromWei(balance, "ether"));
-        assert(balanceInEther < initialBalanceInEther);
+        var initialBalanceInVapor = parseFloat(web3.utils.fromWei(initial.balance, "vapor"));
+        var balanceInVapor = parseFloat(web3.utils.fromWei(balance, "vapor"));
+        assert(balanceInVapor < initialBalanceInVapor);
         done();
       });
     });
   });
 
   it("should return the no code at the previous block number", function(done) {
-    web3.eth.getCode(contractAddress, initialBlockNumber, function(err, code) {
+    web3.vap.getCode(contractAddress, initialBlockNumber, function(err, code) {
       if (err) {
         return done(err);
       }
       assert.strictEqual(code, "0x");
 
       // Check that the code incremented with the block number, just to be sure.
-      web3.eth.getCode(contractAddress, initialBlockNumber + 1, function(err, code) {
+      web3.vap.getCode(contractAddress, initialBlockNumber + 1, function(err, code) {
         if (err) {
           return done(err);
         }

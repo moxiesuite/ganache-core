@@ -27,7 +27,7 @@ describe("Interval Mining", function() {
     );
 
     // Get the first block (pre-condition)
-    web3.eth.getBlockNumber(function(err, number) {
+    web3.vap.getBlockNumber(function(err, number) {
       if (err) {
         return done(err);
       }
@@ -39,7 +39,7 @@ describe("Interval Mining", function() {
 
       setTimeout(function() {
         // Get the first block (pre-condition)
-        web3.eth.getBlockNumber(function(err, latestNumber) {
+        web3.vap.getBlockNumber(function(err, latestNumber) {
           if (err) {
             return done(err);
           }
@@ -61,18 +61,18 @@ describe("Interval Mining", function() {
     );
 
     // Get the first block (pre-condition)
-    web3.eth.getBlockNumber(function(err, number) {
+    web3.vap.getBlockNumber(function(err, number) {
       if (err) {
         return done(err);
       }
       assert.strictEqual(number, 0);
 
       // Queue a transaction
-      web3.eth.sendTransaction(
+      web3.vap.sendTransaction(
         {
           from: firstAddress,
           to: "0x1234567890123456789012345678901234567890",
-          value: web3.utils.toWei(new BN(1), "ether"),
+          value: web3.utils.toWei(new BN(1), "vapor"),
           gas: 90000
         },
         function(err, tx) {
@@ -81,7 +81,7 @@ describe("Interval Mining", function() {
           }
 
           // Ensure there's no receipt since the transaction hasn't yet been processed.
-          web3.eth.getTransactionReceipt(tx, function(err, receipt) {
+          web3.vap.getTransactionReceipt(tx, function(err, receipt) {
             if (err) {
               return done(err);
             }
@@ -92,7 +92,7 @@ describe("Interval Mining", function() {
 
             setTimeout(function() {
               // Get the first block (pre-condition)
-              web3.eth.getTransactionReceipt(tx, function(err, newReceipt) {
+              web3.vap.getTransactionReceipt(tx, function(err, newReceipt) {
                 if (err) {
                   return done(err);
                 }
@@ -133,7 +133,7 @@ describe("Interval Mining", function() {
         }
 
         // Get the first block (pre-condition)
-        web3.eth.getBlockNumber(function(err, initialNumber) {
+        web3.vap.getBlockNumber(function(err, initialNumber) {
           if (err) {
             return done(err);
           }
@@ -141,7 +141,7 @@ describe("Interval Mining", function() {
           // Wait .75 seconds (one and a half mining intervals) and ensure
           // the block number hasn't increased.
           setTimeout(function() {
-            web3.eth.getBlockNumber(function(err, stoppedNumber) {
+            web3.vap.getBlockNumber(function(err, stoppedNumber) {
               if (err) {
                 return done(err);
               }
@@ -166,7 +166,7 @@ describe("Interval Mining", function() {
                   // Wait .75 seconds (one and a half mining intervals) and ensure
                   // the block number has increased by one.
                   setTimeout(function() {
-                    web3.eth.getBlockNumber(function(err, lastNumber) {
+                    web3.vap.getBlockNumber(function(err, lastNumber) {
                       if (err) {
                         return done(err);
                       }
@@ -209,7 +209,7 @@ describe("Interval Mining", function() {
     var bytecode = "0x" + result.contracts["Example.sol:Example"].bytecode;
 
     try {
-      await web3.eth.sendTransaction({
+      await web3.vap.sendTransaction({
         from: firstAddress,
         data: bytecode,
         gas: 3141592

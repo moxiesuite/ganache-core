@@ -3,7 +3,7 @@ const Transaction = require("../../lib/utils/transaction");
 
 describe("Transaction", () => {
   it("Should adhere to EIP-115", () => {
-    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
+    // https://github.com/vaporyco/EIPs/blob/master/EIPS/eip-155.md
     const privateKey = Buffer.from("4646464646464646464646464646464646464646464646464646464646464646", "hex");
 
     const txParams = {

@@ -30,7 +30,7 @@ describe("Gas", function() {
   let accounts = [];
 
   before("get accounts", async function() {
-    accounts = await web3.eth.getAccounts();
+    accounts = await web3.vap.getAccounts();
   });
 
   before("compile source", async function() {
@@ -41,7 +41,7 @@ describe("Gas", function() {
     estimateGasContractData = "0x" + result.contracts["EstimateGas.sol:EstimateGas"].bytecode;
     estimateGasContractAbi = JSON.parse(result.contracts["EstimateGas.sol:EstimateGas"].interface);
 
-    EstimateGasContract = new web3.eth.Contract(estimateGasContractAbi);
+    EstimateGasContract = new web3.vap.Contract(estimateGasContractAbi);
     let promiEvent = EstimateGasContract.deploy({ data: estimateGasContractData }).send({
       from: accounts[0],
       gas: 3141592
@@ -60,7 +60,7 @@ describe("Gas", function() {
   });
 
   async function deployContract(tempWeb3) {
-    let contract = new tempWeb3.eth.Contract(estimateGasContractAbi);
+    let contract = new tempWeb3.vap.Contract(estimateGasContractAbi);
 
     return contract.deploy({ data: estimateGasContractData }).send({ from: accounts[0], gas: 3141592 });
   }
@@ -126,7 +126,7 @@ describe("Gas", function() {
       try {
         tempWeb3 = new Web3(ganacheProvider);
 
-        const from = (await tempWeb3.eth.getAccounts())[0];
+        const from = (await tempWeb3.vap.getAccounts())[0];
 
         let transactions = [
           {
@@ -153,7 +153,7 @@ describe("Gas", function() {
         ];
 
         // Precondition
-        const initialBlockNumber = await tempWeb3.eth.getBlockNumber();
+        const initialBlockNumber = await tempWeb3.vap.getBlockNumber();
         assert.deepStrictEqual(initialBlockNumber, 0, "Current Block Should be 0");
 
         const localGasInstance = await deployContract(tempWeb3);
@@ -165,12 +165,12 @@ describe("Gas", function() {
 
         let hashes = await Promise.all(
           transactions.map((transaction) => {
-            let promiEvent = tempWeb3.eth.sendTransaction(transaction);
+            let promiEvent = tempWeb3.vap.sendTransaction(transaction);
 
             return new Promise((resolve) => {
               promiEvent.once("transactionHash", async(hash) => {
                 // Ensure there's no receipt since the transaction hasn't yet been processed. Ensure IntervalMining
-                let receipt = await tempWeb3.eth.getTransactionReceipt(hash);
+                let receipt = await tempWeb3.vap.getTransactionReceipt(hash);
                 assert.strictEqual(receipt, null, "No receipt since the transaction hasn't yet been processed.");
 
                 resolve(hash);
@@ -178,7 +178,7 @@ describe("Gas", function() {
             });
           })
         );
-        let currentBlockNumber = await tempWeb3.eth.getBlockNumber();
+        let currentBlockNumber = await tempWeb3.vap.getBlockNumber();
         assert.deepStrictEqual(currentBlockNumber, 2, "Current Block Should be 2");
 
         const receipt = await method.send({ from, gas: gasEstimate });
@@ -186,7 +186,7 @@ describe("Gas", function() {
         let transactionCostMinusRefund = gasEstimate - RSELFDESTRUCT_REFUND - RSCLEAR_REFUND;
         assert.strictEqual(receipt.gasUsed, transactionCostMinusRefund);
 
-        let receipts = await Promise.all(hashes.map((hash) => tempWeb3.eth.getTransactionReceipt(hash)));
+        let receipts = await Promise.all(hashes.map((hash) => tempWeb3.vap.getTransactionReceipt(hash)));
         assert.deepStrictEqual(receipts[0].gasUsed, receipts[1].gasUsed, "Tx1 and Tx2 should cost the same gas.");
         assert.deepStrictEqual(
           receipts[1].gasUsed,
@@ -198,7 +198,7 @@ describe("Gas", function() {
           true,
           "(Tx3 has a lower nonce) -> (Tx3 index is < Tx2 index)"
         );
-        let currentBlock = await tempWeb3.eth.getBlock(receipts[0].blockNumber);
+        let currentBlock = await tempWeb3.vap.getBlock(receipts[0].blockNumber);
 
         // ( Tx3 has a lower nonce -> Tx3 index is < Tx2 index ) -> cumulative gas Tx2 > Tx3 > Tx1
         let isAccumulating =
@@ -323,9 +323,9 @@ describe("Gas", function() {
         value: transferAmount
       };
 
-      let gasEstimate = await web3.eth.estimateGas(transactionData);
+      let gasEstimate = await web3.vap.estimateGas(transactionData);
 
-      let receipt = await web3.eth.sendTransaction(transactionData);
+      let receipt = await web3.vap.sendTransaction(transactionData);
 
       assert.strictEqual(receipt.gasUsed, gasEstimate);
     });
@@ -337,7 +337,7 @@ describe("Gas", function() {
 
       expectedGasPrice = w3.utils.toBN(expectedGasPrice);
 
-      const initialBalance = await w3.utils.toBN(await w3.eth.getBalance(accounts[0]));
+      const initialBalance = await w3.utils.toBN(await w3.vap.getBalance(accounts[0]));
 
       let params = {
         from: accounts[0],
@@ -349,10 +349,10 @@ describe("Gas", function() {
         params.gasPrice = expectedGasPrice;
       }
 
-      const receipt = await w3.eth.sendTransaction(params);
+      const receipt = await w3.vap.sendTransaction(params);
       const gasUsed = w3.utils.toBN(receipt.gasUsed);
 
-      const finalBalance = w3.utils.toBN(await w3.eth.getBalance(accounts[0]));
+      const finalBalance = w3.utils.toBN(await w3.vap.getBalance(accounts[0]));
       const deltaBalance = initialBalance.sub(finalBalance);
 
       // the amount we paid in excess of our transferAmount is what we spent on gas
@@ -365,13 +365,13 @@ describe("Gas", function() {
 
       assert(
         expectedGasPrice.eq(actualGasPrice),
-        `Gas price used by EVM (${to.hex(actualGasPrice)}) was different from` +
+        `Gas price used by VVM (${to.hex(actualGasPrice)}) was different from` +
           ` expected gas price (${to.hex(expectedGasPrice)})`
       );
     }
 
     it("should calculate gas expenses correctly in consideration of the default gasPrice", async function() {
-      await testGasExpenseIsCorrect(await web3.eth.getGasPrice());
+      await testGasExpenseIsCorrect(await web3.vap.getGasPrice());
     });
 
     it("should calculate gas expenses correctly in consideration of the requested gasPrice", async function() {
@@ -429,17 +429,17 @@ describe("Gas", function() {
         ];
 
         // Precondition
-        const initialBlockNumber = await tempWeb3.eth.getBlockNumber();
+        const initialBlockNumber = await tempWeb3.vap.getBlockNumber();
         assert.deepStrictEqual(initialBlockNumber, 0, "Current Block Should be 0");
 
         let hashes = await Promise.all(
           transactions.map((transaction) => {
-            let promiEvent = tempWeb3.eth.sendTransaction(transaction);
+            let promiEvent = tempWeb3.vap.sendTransaction(transaction);
 
             return new Promise((resolve) => {
               promiEvent.once("transactionHash", async(hash) => {
                 // Ensure there's no receipt since the transaction hasn't yet been processed. Ensure IntervalMining
-                let receipt = await tempWeb3.eth.getTransactionReceipt(hash);
+                let receipt = await tempWeb3.vap.getTransactionReceipt(hash);
                 assert.strictEqual(receipt, null, "No receipt since the transaction hasn't yet been processed.");
 
                 resolve(hash);
@@ -451,12 +451,12 @@ describe("Gas", function() {
         // Wait .75 seconds (1.5x the mining interval) then get the receipt. It should be processed.
         await sleep(750);
 
-        let currentBlockNumber = await tempWeb3.eth.getBlockNumber();
+        let currentBlockNumber = await tempWeb3.vap.getBlockNumber();
         assert.deepStrictEqual(currentBlockNumber, 1, "Current Block Should be 1");
 
-        let currentBlock = await tempWeb3.eth.getBlock(currentBlockNumber);
+        let currentBlock = await tempWeb3.vap.getBlock(currentBlockNumber);
 
-        let receipts = await Promise.all(hashes.map((hash) => tempWeb3.eth.getTransactionReceipt(hash)));
+        let receipts = await Promise.all(hashes.map((hash) => tempWeb3.vap.getTransactionReceipt(hash)));
 
         assert.deepStrictEqual(receipts[0].gasUsed, receipts[1].gasUsed, "Tx1 and Tx2 should cost the same gas.");
         assert.deepStrictEqual(

@@ -13,9 +13,9 @@ module.exports = (override) => {
     externals: [
       (context, request, callback) => {
         // webpack these modules:
-        // we actually only care about scrypt and eth-block-tracker here, as those are the only native modules
+        // we actually only care about scrypt and vap-block-tracker here, as those are the only native modules
         // but webpack won't detect them if we don't traverse the dependency tree to get to them
-        if (/^(ethereumjs-wallet|scrypt|web3|eth-block-tracker)(\/.*)?$/.test(request)) {
+        if (/^(vaporyjs-wallet|scrypt|web3|vap-block-tracker)(\/.*)?$/.test(request)) {
           return callback();
         }
 
@@ -30,8 +30,8 @@ module.exports = (override) => {
     ],
     resolve: {
       alias: {
-        // eth-block-tracker is es6 but automatically builds an es5 version for us on install. thanks eth-block-tracker!
-        "eth-block-tracker": "eth-block-tracker/dist/es5/index.js",
+        // vap-block-tracker is es6 but automatically builds an es5 version for us on install. thanks vap-block-tracker!
+        "vap-block-tracker": "vap-block-tracker/dist/es5/index.js",
 
         // replace native `scrypt` module with pure js `js-scrypt`
         "scrypt": "js-scrypt",

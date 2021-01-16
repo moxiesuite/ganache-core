@@ -35,7 +35,7 @@ describe("Time adjustment", function() {
   }
 
   before("get current time", function(done) {
-    web3.eth.getBlock("latest", function(err, block) {
+    web3.vap.getBlock("latest", function(err, block) {
       if (err) {
         return done(err);
       }
@@ -45,7 +45,7 @@ describe("Time adjustment", function() {
   });
 
   it("should mine the first block at the time provided", function(done) {
-    web3.eth.getBlock(0, function(err, result) {
+    web3.vap.getBlock(0, function(err, result) {
       if (err) {
         return done(err);
       }
@@ -61,18 +61,18 @@ describe("Time adjustment", function() {
   it("should jump 5 hours", function(done) {
     this.timeout(5000); // this is timing out on travis for some reason :-(
     // Adjust time
-    send("evm_increaseTime", [secondsToJump], function(err, result) {
+    send("vvm_increaseTime", [secondsToJump], function(err, result) {
       if (err) {
         return done(err);
       }
 
       // Mine a block so new time is recorded.
-      send("evm_mine", function(err, result) {
+      send("vvm_mine", function(err, result) {
         if (err) {
           return done(err);
         }
 
-        web3.eth.getBlock("latest", function(err, block) {
+        web3.vap.getBlock("latest", function(err, block) {
           if (err) {
             return done(err);
           }
@@ -92,12 +92,12 @@ describe("Time adjustment", function() {
   it("should mine a block at the given timestamp", function(done) {
     // Adjust time
     var expectedMinedTimestamp = 1000000;
-    send("evm_mine", [expectedMinedTimestamp], function(err, result) {
+    send("vvm_mine", [expectedMinedTimestamp], function(err, result) {
       if (err) {
         return done(err);
       }
 
-      web3.eth.getBlock("latest", function(err, block) {
+      web3.vap.getBlock("latest", function(err, block) {
         if (err) {
           return done(err);
         }
@@ -109,18 +109,18 @@ describe("Time adjustment", function() {
 
   it("should revert time adjustments when snapshot is reverted", function(done) {
     // Adjust time
-    web3.eth.getBlock("latest", function(err, block) {
+    web3.vap.getBlock("latest", function(err, block) {
       if (err) {
         return done(err);
       }
       var originalTimeAdjustment = provider.manager.state.blockchain.timeAdjustment;
 
-      send("evm_snapshot", function(err, result) {
+      send("vvm_snapshot", function(err, result) {
         if (err) {
           return done(err);
         }
         // jump forward another 5 hours
-        send("evm_increaseTime", [secondsToJump], function(err, result) {
+        send("vvm_increaseTime", [secondsToJump], function(err, result) {
           if (err) {
             return done(err);
           }
@@ -129,12 +129,12 @@ describe("Time adjustment", function() {
           assert.equal(currentTimeAdjustment, originalTimeAdjustment + secondsToJump);
 
           // Mine a block so new time is recorded.
-          send("evm_mine", function(err, result) {
+          send("vvm_mine", function(err, result) {
             if (err) {
               return done(err);
             }
 
-            send("evm_revert", [1], function(err, result) {
+            send("vvm_revert", [1], function(err, result) {
               if (err) {
                 return done(err);
               }
@@ -149,25 +149,25 @@ describe("Time adjustment", function() {
   });
 
   it("should allow setting of time", function(done) {
-    web3.eth.getBlock("latest", function(err, block) {
+    web3.vap.getBlock("latest", function(err, block) {
       if (err) {
         return done(err);
       }
 
       var previousTime = block.timestamp;
 
-      send("evm_setTime", [new Date(previousTime - secondsToJump)], function(err, result) {
+      send("vvm_setTime", [new Date(previousTime - secondsToJump)], function(err, result) {
         if (err) {
           return done(err);
         }
 
         // Mine a block so new time is recorded.
-        send("evm_mine", function(err, result) {
+        send("vvm_mine", function(err, result) {
           if (err) {
             return done(err);
           }
 
-          web3.eth.getBlock("latest", function(err, block) {
+          web3.vap.getBlock("latest", function(err, block) {
             if (err) {
               return done(err);
             }

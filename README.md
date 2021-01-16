@@ -31,18 +31,18 @@ yarn add ganache-core
 
 # USAGE
 
-As a [Web3](https://github.com/ethereum/web3.js/) provider:
+As a [Web3](https://github.com/vaporyco/web3.js/) provider:
 
 ```javascript
 const ganache = require("ganache-core");
 web3.setProvider(ganache.provider());
 ```
 
-As an [ethers.js](https://github.com/ethers-io/ethers.js/) provider:
+As an [vapors.js](https://github.com/vaporsjs/vapors.js/) provider:
 
 ```javascript
 const ganache = require("ganache-core");
-const provider = new ethers.providers.Web3Provider(ganache.provider());
+const provider = new vapors.providers.Web3Provider(ganache.provider());
 ```
 
 As a general HTTP and WebSocket server:
@@ -62,21 +62,21 @@ Both `.provider()` and `.server()` take a single object which allows you to spec
 * `"mnemonic"`: Use a specific HD wallet mnemonic to generate initial addresses.
 * `"port"`: Port number to listen on when running as a server.
 * `"seed"`: Use arbitrary data to generate the HD wallet mnemonic to be used.
-* `"default_balance_ether"`: `number` - The default account balance, specified in ether.
+* `"default_balance_vapor"`: `number` - The default account balance, specified in vapor.
 * `"total_accounts"`: `number` - Number of accounts to generate at startup.
 * `"fork"`: `string` or `object` - When a `string`, same as `--fork` option above. Can also be a Web3 Provider object, optionally used in conjunction with the `fork_block_number` option below.
 * `"fork_block_number"`: `string` or `number` - Block number the provider should fork from, when the `fork` option is specified. If the `fork` option is specified as a string including the `@` sign and a block number, the block number in the `fork` parameter takes precedence.
 * `"network_id"`: Specify the network id ganache-core will use to identify itself (defaults to the current time or the network id of the forked blockchain if configured)
-* `"time"`: `Date` - Date that the first block should start. Use this feature, along with the `evm_increaseTime` method to test time-dependent code.
+* `"time"`: `Date` - Date that the first block should start. Use this feature, along with the `vvm_increaseTime` method to test time-dependent code.
 * `"locked"`: `boolean` - whether or not accounts are locked by default.
 * `"unlocked_accounts"`: `Array` - array of addresses or address indexes specifying which accounts should be unlocked.
 * `"db_path"`: `String` - Specify a path to a directory to save the chain database. If a database already exists, `ganache-core` will initialize that chain instead of creating a new one.
 * `"db"`: `Object` - Specify an alternative database instance, for instance [MemDOWN](https://github.com/level/memdown).
 * `"ws"`: Enable a websocket server. This is `true` by default.
 * `"account_keys_path"`: `String` - Specifies a file to save accounts and private keys to, for testing.
-* `"vmErrorsOnRPCResponse"`: `boolean` - Whether or not to transmit transaction failures as RPC errors. Set to `false` for error reporting behaviour which is compatible with other clients such as geth and Parity. This is `true` by default to replicate the error reporting behavior of previous versions of ganache.
+* `"vmErrorsOnRPCResponse"`: `boolean` - Whether or not to transmit transaction failures as RPC errors. Set to `false` for error reporting behaviour which is compatible with other clients such as gvap and Parity. This is `true` by default to replicate the error reporting behavior of previous versions of ganache.
 * `"hdPath"`: The hierarchical deterministic path to use when generating accounts. Default: "m/44'/60'/0'/0/"
-* `"allowUnlimitedContractSize"`: `boolean` - Allows unlimited contract sizes while debugging. By setting this to `true`, the check within the EVM for contract size limit of 24KB (see [EIP-170](https://git.io/vxZkK)) is bypassed. Setting this to `true` **will** cause `ganache-core` to behave differently than production environments. (default: `false`; **ONLY** set to `true` during debugging).
+* `"allowUnlimitedContractSize"`: `boolean` - Allows unlimited contract sizes while debugging. By setting this to `true`, the check within the VVM for contract size limit of 24KB (see [EIP-170](https://git.io/vxZkK)) is bypassed. Setting this to `true` **will** cause `ganache-core` to behave differently than production environments. (default: `false`; **ONLY** set to `true` during debugging).
 * `"gasPrice"`: Sets the default gas price for transactions if not otherwise specified. Must be specified as a hex string in wei. Defaults to `"0x77359400"`, or 2 gwei.
 * `"gasLimit"`: Sets the block gas limit. Must be specified as a hex string. Defaults to `"0x6691b7"`.
 * `"keepAliveTimeout"`: If using `.server()` - Sets the HTTP server's `keepAliveTimeout` in milliseconds. See the [NodeJS HTTP docs](https://nodejs.org/api/http.html#http_server_keepalivetimeout) for details. `5000` by default.
@@ -88,40 +88,40 @@ The RPC methods currently implemented are:
 * `bzz_hive` (stub)
 * `bzz_info` (stub)
 * `debug_traceTransaction`
-* `eth_accounts`
-* `eth_blockNumber`
-* `eth_call`
-* `eth_coinbase`
-* `eth_estimateGas`
-* `eth_gasPrice`
-* `eth_getBalance`
-* `eth_getBlockByNumber`
-* `eth_getBlockByHash`
-* `eth_getBlockTransactionCountByHash`
-* `eth_getBlockTransactionCountByNumber`
-* `eth_getCode` (only supports block number “latest”)
-* `eth_getCompilers`
-* `eth_getFilterChanges`
-* `eth_getFilterLogs`
-* `eth_getLogs`
-* `eth_getStorageAt`
-* `eth_getTransactionByHash`
-* `eth_getTransactionByBlockHashAndIndex`
-* `eth_getTransactionByBlockNumberAndIndex`
-* `eth_getTransactionCount`
-* `eth_getTransactionReceipt`
-* `eth_hashrate`
-* `eth_mining`
-* `eth_newBlockFilter`
-* `eth_newFilter` (includes log/event filters)
-* `eth_protocolVersion`
-* `eth_sendTransaction`
-* `eth_sendRawTransaction`
-* `eth_sign`
-* `eth_subscribe` (only for websocket connections. "syncing" subscriptions are not yet supported)
-* `eth_unsubscribe` (only for websocket connections. "syncing" subscriptions are not yet supported)
-* `eth_syncing`
-* `eth_uninstallFilter`
+* `vap_accounts`
+* `vap_blockNumber`
+* `vap_call`
+* `vap_coinbase`
+* `vap_estimateGas`
+* `vap_gasPrice`
+* `vap_getBalance`
+* `vap_getBlockByNumber`
+* `vap_getBlockByHash`
+* `vap_getBlockTransactionCountByHash`
+* `vap_getBlockTransactionCountByNumber`
+* `vap_getCode` (only supports block number “latest”)
+* `vap_getCompilers`
+* `vap_getFilterChanges`
+* `vap_getFilterLogs`
+* `vap_getLogs`
+* `vap_getStorageAt`
+* `vap_getTransactionByHash`
+* `vap_getTransactionByBlockHashAndIndex`
+* `vap_getTransactionByBlockNumberAndIndex`
+* `vap_getTransactionCount`
+* `vap_getTransactionReceipt`
+* `vap_hashrate`
+* `vap_mining`
+* `vap_newBlockFilter`
+* `vap_newFilter` (includes log/event filters)
+* `vap_protocolVersion`
+* `vap_sendTransaction`
+* `vap_sendRawTransaction`
+* `vap_sign`
+* `vap_subscribe` (only for websocket connections. "syncing" subscriptions are not yet supported)
+* `vap_unsubscribe` (only for websocket connections. "syncing" subscriptions are not yet supported)
+* `vap_syncing`
+* `vap_uninstallFilter`
 * `net_listening`
 * `net_peerCount`
 * `net_version`
@@ -140,14 +140,14 @@ The RPC methods currently implemented are:
 
 There’s also special non-standard methods that aren’t included within the original RPC specification:
 
-* `evm_snapshot` : Snapshot the state of the blockchain at the current block. Takes no parameters. Returns the integer id of the snapshot created.
-* `evm_revert` : Revert the state of the blockchain to a previous snapshot. Takes a single parameter, which is the snapshot id to revert to. If no snapshot id is passed it will revert to the latest snapshot. Returns `true`.
-* `evm_increaseTime` : Jump forward in time. Takes one parameter, which is the amount of time to increase in seconds. Returns the total time adjustment, in seconds.
-* `evm_mine` : Force a block to be mined. Takes one optional parameter, which is the timestamp a block should setup as the mining time. Mines a block independent of whether or not mining is started or stopped.
+* `vvm_snapshot` : Snapshot the state of the blockchain at the current block. Takes no parameters. Returns the integer id of the snapshot created.
+* `vvm_revert` : Revert the state of the blockchain to a previous snapshot. Takes a single parameter, which is the snapshot id to revert to. If no snapshot id is passed it will revert to the latest snapshot. Returns `true`.
+* `vvm_increaseTime` : Jump forward in time. Takes one parameter, which is the amount of time to increase in seconds. Returns the total time adjustment, in seconds.
+* `vvm_mine` : Force a block to be mined. Takes one optional parameter, which is the timestamp a block should setup as the mining time. Mines a block independent of whether or not mining is started or stopped.
 
 # UNSUPPORTED METHODS
 
-* `eth_compileSolidity`: If you'd like Solidity compilation in Javascript, please see the [solc-js project](https://github.com/ethereum/solc-js).
+* `vap_compileSolidity`: If you'd like Solidity compilation in Javascript, please see the [solc-js project](https://github.com/vaporyco/solc-js).
 
 
 # TESTING

@@ -28,7 +28,7 @@ describe("Transaction rejection", function() {
   var source = fs.readFileSync(path.join(__dirname, "EstimateGas.sol"), "utf8");
 
   before("get accounts", function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) {
         return done(err);
       }
@@ -38,7 +38,7 @@ describe("Transaction rejection", function() {
   });
 
   before("lock account 1", function() {
-    return web3.eth.personal.lockAccount(accounts[1]);
+    return web3.vap.personal.lockAccount(accounts[1]);
   });
 
   before("compile source", function() {
@@ -48,13 +48,13 @@ describe("Transaction rejection", function() {
     estimateGasContractData = "0x" + result.contracts["EstimateGas.sol:EstimateGas"].bytecode;
     estimateGasContractAbi = JSON.parse(result.contracts["EstimateGas.sol:EstimateGas"].interface);
 
-    EstimateGasContract = new web3.eth.Contract(estimateGasContractAbi);
+    EstimateGasContract = new web3.vap.Contract(estimateGasContractAbi);
     return EstimateGasContract.deploy({ data: estimateGasContractData })
       .send({ from: accounts[0], gas: 3141592 })
       .then(function(instance) {
         // TODO: ugly workaround - not sure why this is necessary.
         if (!instance._requestManager.provider) {
-          instance._requestManager.setProvider(web3.eth._provider);
+          instance._requestManager.setProvider(web3.vap._provider);
         }
         estimateGasContractAddress = to.hex(instance.options.address);
       });
@@ -113,7 +113,7 @@ describe("Transaction rejection", function() {
   it("should reject transaction if insufficient funds", function(done) {
     testTransactionForRejection(
       {
-        value: web3.utils.toWei("100000", "ether")
+        value: web3.utils.toWei("100000", "vapor")
       },
       /sender doesn't have enough funds to send tx/,
       done
@@ -137,7 +137,7 @@ describe("Transaction rejection", function() {
     let request = {
       jsonrpc: 2.0,
       id: new Date().getTime(),
-      method: "eth_sendTransaction",
+      method: "vap_sendTransaction",
       params: [params]
     };
 
@@ -157,7 +157,7 @@ describe("Transaction rejection", function() {
           return done(new Error("Error was returned which had no message"));
         }
       } else if (response.result) {
-        web3.eth
+        web3.vap
           .getTransactionReceipt(response.result)
           .then((result) => {
             if (to.number(result.status) === 0) {
@@ -177,7 +177,7 @@ describe("Transaction rejection", function() {
             return done(error);
           });
       } else {
-        return done(new Error("eth_sendTransaction responded with empty RPC response"));
+        return done(new Error("vap_sendTransaction responded with empty RPC response"));
       }
     });
   }

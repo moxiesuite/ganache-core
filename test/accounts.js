@@ -17,7 +17,7 @@ describe("Accounts", function() {
       })
     );
 
-    web3.eth.getAccounts(function(err, accounts) {
+    web3.vap.getAccounts(function(err, accounts) {
       if (err) {
         return done(err);
       }
@@ -36,11 +36,11 @@ describe("Accounts", function() {
       })
     );
 
-    web3.eth.sendTransaction(
+    web3.vap.sendTransaction(
       {
         from: expectedAddress,
         to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
-        value: web3.utils.toWei(new BN(1), "ether"),
+        value: web3.utils.toWei(new BN(1), "vapor"),
         gasLimit: 90000
       },
       function(err, tx) {
@@ -70,11 +70,11 @@ describe("Accounts", function() {
       })
     );
 
-    web3.eth.sendTransaction(
+    web3.vap.sendTransaction(
       {
         from: expectedAddress,
         to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
-        value: web3.utils.toWei(new BN(1), "ether"),
+        value: web3.utils.toWei(new BN(1), "vapor"),
         gasLimit: 90000
       },
       function(err, tx) {
@@ -97,11 +97,11 @@ describe("Accounts", function() {
       })
     );
 
-    web3.eth.sendTransaction(
+    web3.vap.sendTransaction(
       {
         from: expectedAddress,
         to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
-        value: web3.utils.toWei(new BN(1), "ether"),
+        value: web3.utils.toWei(new BN(1), "vapor"),
         gasLimit: 90000
       },
       function(err, tx) {
@@ -126,39 +126,39 @@ describe("Accounts", function() {
       })
     );
 
-    // Set up: give second address some ether
-    return web3.eth
+    // Set up: give second address some vapor
+    return web3.vap
       .sendTransaction({
         from: expectedAddress,
         to: secondAddress,
-        value: web3.utils.toWei(new BN(10), "ether"),
+        value: web3.utils.toWei(new BN(10), "vapor"),
         gasLimit: 90000
       })
       .then(() => {
         // Now we should be able to send a transaction from second address without issue.
-        return web3.eth.sendTransaction({
+        return web3.vap.sendTransaction({
           from: secondAddress,
           to: expectedAddress,
-          value: web3.utils.toWei(new BN(5), "ether"),
+          value: web3.utils.toWei(new BN(5), "vapor"),
           gasLimit: 90000
         });
       })
       .then((tx) => {
         // And for the heck of it let's check the balance just to make sure it went through
-        return web3.eth.getBalance(secondAddress);
+        return web3.vap.getBalance(secondAddress);
       })
       .then((balance) => {
-        var balanceInEther = web3.utils.fromWei(new BN(balance), "ether");
+        var balanceInVapor = web3.utils.fromWei(new BN(balance), "vapor");
 
-        if (typeof balanceInEther === "string") {
-          balanceInEther = parseFloat(balanceInEther);
+        if (typeof balanceInVapor === "string") {
+          balanceInVapor = parseFloat(balanceInVapor);
         } else {
-          balanceInEther.toNumber();
+          balanceInVapor.toNumber();
         }
 
-        // Can't check the balance exactly. It cost some ether to send the transaction.
-        assert(balanceInEther > 4);
-        assert(balanceInEther < 5);
+        // Can't check the balance exactly. It cost some vapor to send the transaction.
+        assert(balanceInVapor > 4);
+        assert(balanceInVapor < 5);
       });
   });
 
@@ -174,7 +174,7 @@ describe("Accounts", function() {
       })
     );
 
-    return web3.eth
+    return web3.vap
       .sign("some data", secondAddress)
       .then((result) => {
         assert.fail("Expected an error while signing when not managing the private key");
@@ -192,7 +192,7 @@ describe("Accounts", function() {
       })
     );
 
-    web3.eth.getAccounts(function(err, result) {
+    web3.vap.getAccounts(function(err, result) {
       if (err) {
         return done(err);
       }
@@ -209,7 +209,7 @@ describe("Accounts", function() {
       })
     );
 
-    web3.eth.getAccounts(function(err, result) {
+    web3.vap.getAccounts(function(err, result) {
       if (err) {
         return done(err);
       }
@@ -218,29 +218,29 @@ describe("Accounts", function() {
     });
   });
 
-  it("should respect the default_balance_ether option", function(done) {
+  it("should respect the default_balance_vapor option", function(done) {
     var web3 = new Web3();
     web3.setProvider(
       Ganache.provider({
-        default_balance_ether: 1.23456
+        default_balance_vapor: 1.23456
       })
     );
 
-    web3.eth.getAccounts(function(err, accounts) {
+    web3.vap.getAccounts(function(err, accounts) {
       if (err) {
         return done(err);
       }
 
       function checkBalance(account) {
         return new Promise(function(resolve, reject) {
-          web3.eth.getBalance(accounts[0], function(err, balance) {
+          web3.vap.getBalance(accounts[0], function(err, balance) {
             if (err) {
               return reject(err);
             }
 
-            var balanceInEther = web3.utils.fromWei(balance, "Ether");
+            var balanceInVapor = web3.utils.fromWei(balance, "Vapor");
 
-            assert.strictEqual(balanceInEther, "1.23456");
+            assert.strictEqual(balanceInVapor, "1.23456");
             return resolve(balance);
           });
         });

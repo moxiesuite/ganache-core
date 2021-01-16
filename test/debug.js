@@ -27,7 +27,7 @@ describe("Debug", function() {
   });
 
   before("get accounts", function() {
-    return web3.eth.getAccounts().then((accs) => {
+    return web3.vap.getAccounts().then((accs) => {
       accounts = accs;
     });
   });
@@ -39,7 +39,7 @@ describe("Debug", function() {
     var code = "0x" + result.contracts["DebugContract.sol:DebugContract"].bytecode;
     var abi = JSON.parse(result.contracts["DebugContract.sol:DebugContract"].interface);
 
-    DebugContract = new web3.eth.Contract(abi);
+    DebugContract = new web3.vap.Contract(abi);
     DebugContract._code = code;
 
     return DebugContract.deploy({ data: code })
@@ -49,7 +49,7 @@ describe("Debug", function() {
 
         // TODO: ugly workaround - not sure why this is necessary.
         if (!debugContract._requestManager.provider) {
-          debugContract._requestManager.setProvider(web3.eth._provider);
+          debugContract._requestManager.setProvider(web3.vap._provider);
         }
       });
   });
@@ -115,7 +115,7 @@ describe("Debug", function() {
           for (let op of result.structLogs) {
             if (op.stack.length > 0) {
               // check formatting of stack
-              // formatting was broken when updating to ethereumjs-vm v2.3.3
+              // formatting was broken when updating to vaporyjs-vm v2.3.3
               assert.strictEqual(op.stack[0].length, 64);
               assert.notStrictEqual(op.stack[0].substr(0, 2), "0x");
               break;

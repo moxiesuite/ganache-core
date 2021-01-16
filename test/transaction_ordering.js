@@ -10,7 +10,7 @@ describe("Transaction Ordering", function() {
   var web3 = new Web3(Ganache.provider());
 
   before(function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) {
         return done(err);
       }
@@ -48,12 +48,12 @@ describe("Transaction Ordering", function() {
     txData.value = 0x1;
     txData.nonce = 0;
     txData.gas = 21000;
-    web3.eth.sendTransaction(txData, function(err, tx) {
+    web3.vap.sendTransaction(txData, function(err, tx) {
       if (err) {
         return done(err);
       }
       txData.nonce = 1;
-      web3.eth.sendTransaction(txData, function(err, tx) {
+      web3.vap.sendTransaction(txData, function(err, tx) {
         if (err) {
           return done(err);
         }
@@ -67,7 +67,7 @@ describe("Transaction Ordering", function() {
             if (err) {
               return done(err);
             }
-            web3.eth.getBlock("latest", function(err, block) {
+            web3.vap.getBlock("latest", function(err, block) {
               if (err) {
                 return done(err);
               }
@@ -87,13 +87,13 @@ describe("Transaction Ordering", function() {
     txData.value = 0x1;
     txData.gas = 21000;
     txData.gasPrice = 0x1;
-    web3.eth.sendTransaction(txData, function(err, tx) {
+    web3.vap.sendTransaction(txData, function(err, tx) {
       if (err) {
         return done(err);
       }
       txData.gasPrice = 2;
       txData.from = accounts[1];
-      web3.eth.sendTransaction(txData, function(err, tx) {
+      web3.vap.sendTransaction(txData, function(err, tx) {
         if (err) {
           return done(err);
         }
@@ -107,7 +107,7 @@ describe("Transaction Ordering", function() {
             if (err) {
               return done(err);
             }
-            web3.eth.getBlock("latest", true, function(err, block) {
+            web3.vap.getBlock("latest", true, function(err, block) {
               if (err) {
                 return done(err);
               }

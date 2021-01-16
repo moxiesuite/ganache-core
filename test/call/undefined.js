@@ -25,7 +25,7 @@ function setUp(options = { mnemonic }, contractName = "Example") {
   });
 
   before("get accounts", async function() {
-    context.accounts = await context.web3.eth.getAccounts();
+    context.accounts = await context.web3.vap.getAccounts();
   });
 
   before("compile source", async function() {
@@ -41,19 +41,19 @@ function setUp(options = { mnemonic }, contractName = "Example") {
 describe("call:undefined", function() {
   let context = setUp({ mnemonic }, "Call");
 
-  it("should return `0x` when eth_call fails (web3.eth call)", async function() {
+  it("should return `0x` when vap_call fails (web3.vap call)", async function() {
     let { instance, web3 } = context;
 
     const signature = instance.methods.causeReturnValueOfUndefined()._method.signature;
     // test raw JSON RPC value:
-    const result = await web3.eth.call({
+    const result = await web3.vap.call({
       to: instance._address,
       data: signature
     });
     assert.strictEqual(result, "0x");
   });
 
-  it("should throw due to returned value of `0x` when eth_call fails (compiled contract call)", function(done) {
+  it("should throw due to returned value of `0x` when vap_call fails (compiled contract call)", function(done) {
     let { instance } = context;
     // running this test with callback style because I couldn't get `assert.throws`
     // to work with async/await (in node 10.0.0 this is handled by `assert.rejects`)
@@ -65,7 +65,7 @@ describe("call:undefined", function() {
     });
   });
 
-  it("should return a value when contract and method exists at block (web3.eth.call)", async function() {
+  it("should return a value when contract and method exists at block (web3.vap.call)", async function() {
     const { instance, web3 } = context;
 
     const signature = instance.methods.theAnswerToLifeTheUniverseAndEverything()._method.signature;
@@ -74,7 +74,7 @@ describe("call:undefined", function() {
       data: signature
     };
     // test raw JSON RPC value:
-    const result = await web3.eth.call(params, "latest");
+    const result = await web3.vap.call(params, "latest");
     assert.strictEqual(
       result,
       "0x000000000000000000000000000000000000000000000000000000000000002a",
@@ -96,7 +96,7 @@ describe("call:undefined", function() {
       to: instance._address,
       data: signature
     };
-    const result = await web3.eth.call(params, "earliest");
+    const result = await web3.vap.call(params, "earliest");
 
     assert.strictEqual(result, "0x");
   });
@@ -107,7 +107,7 @@ describe("call:undefined", function() {
       to: instance._address,
       data: "0x01234567"
     };
-    const result = await web3.eth.call(params, "latest");
+    const result = await web3.vap.call(params, "latest");
 
     assert.strictEqual(result, "0x");
   });

@@ -21,7 +21,7 @@ var logger = {
  * NOTE: Naming in these tests is a bit confusing. Here, the "main chain"
  * is the main chain the tests interact with; and the "forked chain" is the
  * chain that _was forked_. This is in contrast to general naming, where the
- * main chain represents the main chain to be forked (like the Ethereum live
+ * main chain represents the main chain to be forked (like the Vapory live
  * network) and the fork chaing being "the fork".
  */
 
@@ -101,30 +101,30 @@ describe("Contract Deployed on Main Chain After Fork", function() {
 
   before("Gather main accounts", async function() {
     this.timeout(5000);
-    mainAccounts = await mainWeb3.eth.getAccounts();
+    mainAccounts = await mainWeb3.vap.getAccounts();
   });
 
   before("Deploy initial contract", async function() {
-    const receipt = await mainWeb3.eth.sendTransaction({
+    const receipt = await mainWeb3.vap.sendTransaction({
       from: mainAccounts[0],
       data: contract.binary,
       gas: 3141592,
-      value: mainWeb3.utils.toWei("1", "ether")
+      value: mainWeb3.utils.toWei("1", "vapor")
     });
 
     contractAddress = receipt.contractAddress;
 
     // Ensure there's *something* there.
-    const code = await mainWeb3.eth.getCode(contractAddress);
+    const code = await mainWeb3.vap.getCode(contractAddress);
     assert.notStrictEqual(code, null);
     assert.notStrictEqual(code, "0x");
     assert.notStrictEqual(code, "0x0");
   });
 
-  it("should send 1 ether to the created contract, checked on the forked chain", async function() {
-    const balance = await mainWeb3.eth.getBalance(contractAddress);
+  it("should send 1 vapor to the created contract, checked on the forked chain", async function() {
+    const balance = await mainWeb3.vap.getBalance(contractAddress);
 
-    assert.strictEqual(balance, mainWeb3.utils.toWei("1", "ether"));
+    assert.strictEqual(balance, mainWeb3.utils.toWei("1", "vapor"));
   });
 
   after("Shutdown server", function(done) {

@@ -21,7 +21,7 @@ const testTimeout = async(keepAliveTimeout, sleepTime, errorMessage) => {
       url: "http://" + host + ":" + port,
       json: {
         jsonrpc: "2.0",
-        method: "eth_mining",
+        method: "vap_mining",
         params: [],
         id: 71
       },

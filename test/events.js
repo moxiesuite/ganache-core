@@ -27,7 +27,7 @@ var tests = function(web3, EventTest) {
 
   describe("events", function() {
     before(function(done) {
-      web3.eth.getAccounts(function(err, accs) {
+      web3.vap.getAccounts(function(err, accs) {
         if (err) {
           return done(err);
         }
@@ -46,7 +46,7 @@ var tests = function(web3, EventTest) {
       }
 
       var abi = JSON.parse(result.contracts[":EventTest"].interface);
-      EventTest = new web3.eth.Contract(abi);
+      EventTest = new web3.vap.Contract(abi);
       EventTest._data = "0x" + result.contracts[":EventTest"].bytecode;
       done();
     });
@@ -59,7 +59,7 @@ var tests = function(web3, EventTest) {
 
           // TODO: ugly workaround - not sure why this is necessary.
           if (!instance._requestManager.provider) {
-            instance._requestManager.setProvider(web3.eth._provider);
+            instance._requestManager.setProvider(web3.vap._provider);
           }
         });
     });
@@ -140,7 +140,7 @@ var tests = function(web3, EventTest) {
         .then((newInstance) => {
           // TODO: ugly workaround - not sure why this is necessary.
           if (!newInstance._requestManager.provider) {
-            newInstance._requestManager.setProvider(web3.eth._provider);
+            newInstance._requestManager.setProvider(web3.vap._provider);
           }
 
           var event = newInstance.events.ExampleEvent({ filter: { first: expectedValue }, fromBlock: 0 });
@@ -167,7 +167,7 @@ var tests = function(web3, EventTest) {
       provider.send(
         {
           jsonrpc: "2.0",
-          method: "eth_getLogs",
+          method: "vap_getLogs",
           params: [
             {
               fromBlock: "0x0",
@@ -200,7 +200,7 @@ var tests = function(web3, EventTest) {
       provider.send(
         {
           jsonrpc: "2.0",
-          method: "eth_subscribe",
+          method: "vap_subscribe",
           params: ["newHeads"],
           id: new Date().getTime()
         },
@@ -228,7 +228,7 @@ var tests = function(web3, EventTest) {
           web3.currentProvider.send(
             {
               jsonrpc: "2.0",
-              method: "evm_mine",
+              method: "vvm_mine",
               id: new Date().getTime()
             },
             function(err) {

@@ -55,11 +55,11 @@ const runTests = function(providerInit) {
     });
 
     before("Gather accounts", async function() {
-      accounts = await web3.eth.getAccounts();
+      accounts = await web3.vap.getAccounts();
     });
 
     before("send transaction", async function() {
-      tx = await web3.eth.sendTransaction({
+      tx = await web3.vap.sendTransaction({
         from: accounts[0],
         gas: "0x2fefd8",
         data: contract.binary
@@ -67,7 +67,7 @@ const runTests = function(providerInit) {
     });
 
     it("should have block height 1", async function() {
-      let res = await web3.eth.getBlockNumber();
+      let res = await web3.vap.getBlockNumber();
       assert(res === 1);
       // Close the first provider now that we've gotten where we need to be.
       // Note: we specifically close the provider so we can read from the same db.
@@ -82,22 +82,22 @@ const runTests = function(providerInit) {
     }).slow(200);
 
     it("should still be on block height 1", async function() {
-      const result = await web3.eth.getBlockNumber();
+      const result = await web3.vap.getBlockNumber();
       assert(result === 1);
     }).timeout(5000);
 
     it("should still have block data for first block", async function() {
-      await web3.eth.getBlock(1);
+      await web3.vap.getBlock(1);
     });
 
     it("should have a receipt for the previous transaction", async function() {
-      const receipt = await web3.eth.getTransactionReceipt(tx.transactionHash);
+      const receipt = await web3.vap.getTransactionReceipt(tx.transactionHash);
       assert.notStrictEqual(receipt, null, "Receipt shouldn't be null!");
       assert.strictEqual(receipt.transactionHash, tx.transactionHash);
     });
 
     it("should maintain the balance of the original accounts", async function() {
-      const balance = await web3.eth.getBalance(accounts[0]);
+      const balance = await web3.vap.getBalance(accounts[0]);
       assert(balance > 98);
     });
   });
@@ -125,54 +125,54 @@ const runRegressionTests = function(regressionProviderInit, memdbProviderInit) {
     });
 
     before("Gather accounts", async function() {
-      accounts = await web3.eth.getAccounts();
+      accounts = await web3.vap.getAccounts();
     });
 
     it("should have identical accounts (same mnemonic)", async function() {
-      const memAccounts = await memdbWeb3.eth.getAccounts();
+      const memAccounts = await memdbWeb3.vap.getAccounts();
       assert.strictEqual(str(accounts), str(memAccounts), "accounts should be equal on both chains");
     });
 
     it(`should be on block height ${blockHeight} (db store)`, async function() {
-      const result = await web3.eth.getBlockNumber();
+      const result = await web3.vap.getBlockNumber();
       assert(result === blockHeight);
     });
 
     it("should be on block height 0 (mem store)", async function() {
-      const result = await memdbWeb3.eth.getBlockNumber();
+      const result = await memdbWeb3.vap.getBlockNumber();
       assert(result === 0);
     });
 
     it("should issue/accept two tx's (mem store)", async function() {
       // Don't change the details of this tx - it's needed to deterministically match a manually created
       // DB with prior versions of ganache-core
-      let { timestamp } = await memdbWeb3.eth.getBlock(0);
+      let { timestamp } = await memdbWeb3.vap.getBlock(0);
       assert(timestamp);
       const txOptions = {
         from: accounts[0],
         to: accounts[1],
         value: 1
       };
-      const receipt = await memdbSend("eth_sendTransaction", txOptions);
-      await memdbSend("evm_mine", ++timestamp);
-      const receipt2 = await memdbSend("eth_sendTransaction", txOptions);
-      await memdbSend("evm_mine", ++timestamp);
+      const receipt = await memdbSend("vap_sendTransaction", txOptions);
+      await memdbSend("vvm_mine", ++timestamp);
+      const receipt2 = await memdbSend("vap_sendTransaction", txOptions);
+      await memdbSend("vvm_mine", ++timestamp);
       assert(receipt.result, "Should return a tx hash");
       assert(receipt2.result, "Should return a tx hash");
     });
 
     it("should be on block height 2 (mem store)", async function() {
-      const result = await memdbWeb3.eth.getBlockNumber();
+      const result = await memdbWeb3.vap.getBlockNumber();
       assert(result === 2);
     });
 
     it.skip("should produce identical blocks (persistence db - memdb)", async function() {
-      blocks.push(await web3.eth.getBlock(0, true));
-      blocks.push(await web3.eth.getBlock(1, true));
-      blocks.push(await web3.eth.getBlock(2, true));
-      memdbBlocks.push(await memdbWeb3.eth.getBlock(0, true));
-      memdbBlocks.push(await memdbWeb3.eth.getBlock(1, true));
-      memdbBlocks.push(await memdbWeb3.eth.getBlock(2, true));
+      blocks.push(await web3.vap.getBlock(0, true));
+      blocks.push(await web3.vap.getBlock(1, true));
+      blocks.push(await web3.vap.getBlock(2, true));
+      memdbBlocks.push(await memdbWeb3.vap.getBlock(0, true));
+      memdbBlocks.push(await memdbWeb3.vap.getBlock(1, true));
+      memdbBlocks.push(await memdbWeb3.vap.getBlock(2, true));
       for (let i = 0; i < blocks.length; i++) {
         assert.strictEqual(str(blocks[i]), str(memdbBlocks[i]));
       }
@@ -181,10 +181,10 @@ const runRegressionTests = function(regressionProviderInit, memdbProviderInit) {
     it.skip("should produce identical transactions (persistence db - memdb)", async function() {
       // Start at block 1 to skip genesis block
       for (let i = 1; i < blocks.length; i++) {
-        const block = await memdbWeb3.eth.getBlock(i, false);
+        const block = await memdbWeb3.vap.getBlock(i, false);
         for (let j = 0; j < block.transactions.length; j++) {
-          const tx = await web3.eth.getTransaction(block.transactions[j]);
-          const memDbTx = await memdbWeb3.eth.getTransaction(block.transactions[j]);
+          const tx = await web3.vap.getTransaction(block.transactions[j]);
+          const memDbTx = await memdbWeb3.vap.getTransaction(block.transactions[j]);
           assert(tx && memDbTx);
           assert.strictEqual(str(tx), str(memDbTx));
         }
@@ -233,7 +233,7 @@ describe("Regression test DB", function() {
   const mnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
   const time = new Date("2009-01-03T18:15:05+00:00");
   const networkId = "1337";
-  const blockTime = 1000; // An abundantly sufficient block time used with evm_mine for deterministic results
+  const blockTime = 1000; // An abundantly sufficient block time used with vvm_mine for deterministic results
 
   // initialize a custom persistence provider
   const options = { mnemonic, network_id: networkId, time, blockTime };

@@ -8,10 +8,10 @@ try {
   // make sure these exist before we try to load ganache with native modules
   const optionalDependencies = require("./package.json").optionalDependencies;
   const wrongWeb3 = require("web3/package.json").version !== optionalDependencies["web3"];
-  const wrongEthereumJs = require(
-    "ethereumjs-wallet/package.json"
-  ).version !== optionalDependencies["ethereumjs-wallet"];
-  if (wrongWeb3 || wrongEthereumJs) {
+  const wrongVaporyJs = require(
+    "vaporyjs-wallet/package.json"
+  ).version !== optionalDependencies["vaporyjs-wallet"];
+  if (wrongWeb3 || wrongVaporyJs) {
     useBundled();
   } else {
     module.exports = require("./public-exports.js");

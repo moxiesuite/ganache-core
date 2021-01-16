@@ -13,7 +13,7 @@ describe("Custom Gas Price", function() {
     var provider = Ganache.provider({ gasPrice: 15, logger: logger });
     var web3 = new Web3();
     web3.setProvider(provider);
-    web3.eth.getGasPrice(function(err, result) {
+    web3.vap.getGasPrice(function(err, result) {
       if (err) {
         return done(err);
       }
@@ -26,7 +26,7 @@ describe("Custom Gas Price", function() {
     var provider = Ganache.provider({ gasPrice: 0xf, logger: logger });
     var web3 = new Web3();
     web3.setProvider(provider);
-    web3.eth.getGasPrice(function(err, result) {
+    web3.vap.getGasPrice(function(err, result) {
       if (err) {
         return done(err);
       }

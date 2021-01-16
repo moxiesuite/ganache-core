@@ -18,7 +18,7 @@ describe("Custom Gas Limit", function() {
   });
 
   it("The block should show the correct custom Gas Limit", function(done) {
-    web3.eth.getBlock(0, function(err, block) {
+    web3.vap.getBlock(0, function(err, block) {
       if (err) {
         return done(err);
       }
