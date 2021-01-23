@@ -1,4 +1,4 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var Ganache = require("../index.js");
 var fs = require("fs");
 var path = require("path");
@@ -31,7 +31,7 @@ describe("Unlimited Contract Size", function() {
     var accounts;
 
     before("get accounts", function(done) {
-      web3.eth.getAccounts(function(err, accs) {
+      web3.vap.getAccounts(function(err, accs) {
         if (err) return done(err);
         accounts = accs;
         done();
@@ -39,7 +39,7 @@ describe("Unlimited Contract Size", function() {
     });
 
     it("should fail deployment", function(done) {
-      let DummyContract = new web3.eth.Contract(contract.abi);
+      let DummyContract = new web3.vap.Contract(contract.abi);
       DummyContract.deploy({
         data: contract.bytecode
       })
@@ -63,7 +63,7 @@ describe("Unlimited Contract Size", function() {
     var accounts;
 
     before("get accounts", function(done) {
-      web3.eth.getAccounts(function(err, accs) {
+      web3.vap.getAccounts(function(err, accs) {
         if (err) return done(err);
         accounts = accs;
         done();
@@ -71,7 +71,7 @@ describe("Unlimited Contract Size", function() {
     });
 
     it("should succeed deployment", function(done) {
-      let DummyContract = new web3.eth.Contract(contract.abi);
+      let DummyContract = new web3.vap.Contract(contract.abi);
       DummyContract.deploy({
         data: contract.bytecode
       })

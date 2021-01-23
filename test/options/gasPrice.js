@@ -1,5 +1,5 @@
 const to = require('../../lib/utils/to');
-const Web3 = require('web3');
+const Web3 = require('@vapory/web3');
 const assert = require('assert');
 const Ganache = require("../../index");
 const path = require("path");
@@ -24,7 +24,7 @@ function setUp(options = {mnemonic}, contractName = 'Example') {
   })
 
   before('get accounts', async function() {
-    context.accounts = await context.web3.eth.getAccounts()
+    context.accounts = await context.web3.vap.getAccounts()
   })
 
   before("compile source", async function() {
@@ -47,7 +47,7 @@ describe('options:gasPrice', function() {
       let receipt = await context.instance.methods.setValue('0x10').send({from: context.accounts[0], gas: 3141592})
 
       let transactionHash = receipt.transactionHash;
-      let tx = await context.web3.eth.getTransaction(transactionHash)
+      let tx = await context.web3.vap.getTransaction(transactionHash)
       let gasPrice = tx.gasPrice
 
       assert.deepEqual(to.hex(gasPrice), to.hex(assignedGasPrice))
@@ -67,7 +67,7 @@ describe('options:gasPrice', function() {
       let receipt = await context.instance.methods.setValue('0x10').send({from: context.accounts[0], gas: 3141592})
 
       let transactionHash = receipt.transactionHash;
-      let tx = await context.web3.eth.getTransaction(transactionHash)
+      let tx = await context.web3.vap.getTransaction(transactionHash)
       let gasPrice = tx.gasPrice
 
       assert.deepEqual(to.hex(gasPrice), to.hex(assignedGasPrice))

@@ -1,4 +1,4 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var assert = require('assert');
 var Ganache = require("../index.js");
 var fs = require("fs");
@@ -20,7 +20,7 @@ function runTests(web3, provider, extraTests) {
   }
 
   before("get accounts", function() {
-    return web3.eth.getAccounts().then(function(accs) {
+    return web3.vap.getAccounts().then(function(accs) {
       testState.accounts = accs;
     });
   });
@@ -34,14 +34,14 @@ function runTests(web3, provider, extraTests) {
     testState.code = "0x" + result.contracts["RuntimeError.sol:RuntimeError"].bytecode;
     var abi = JSON.parse(result.contracts["RuntimeError.sol:RuntimeError"].interface);
 
-    testState.ErrorContract = new web3.eth.Contract(abi);
+    testState.ErrorContract = new web3.vap.Contract(abi);
     testState.ErrorContract._code = testState.code;
     testState.ErrorContract.deploy({data: testState.code})
       .send({from: testState.accounts[0], gas: 3141592})
       .then(function(instance) {
         // TODO: ugly workaround - not sure why this is necessary.
         if (!instance._requestManager.provider) {
-          instance._requestManager.setProvider(web3.eth._provider);
+          instance._requestManager.setProvider(web3.vap._provider);
         }
         testState.errorInstance = instance;
         done();
@@ -49,10 +49,10 @@ function runTests(web3, provider, extraTests) {
   });
 
   it("should output the transaction hash even if an runtime error occurs (out of gas)", function(done) {
-    // we can't use `web3.eth.sendTransaction` because it will obfuscate the result
+    // we can't use `web3.vap.sendTransaction` because it will obfuscate the result
     web3.currentProvider.send({
       jsonrpc: "2.0",
-      method: "eth_sendTransaction",
+      method: "vap_sendTransaction",
       params: [{
         from: testState.accounts[0],
         data: testState.code
@@ -79,11 +79,11 @@ function runTests(web3, provider, extraTests) {
   });
 
   it("should output the transaction hash even if a runtime error occurs (revert)", function(done) {
-      // we can't use `web3.eth.sendTransaction` because it will obfuscate the result
+      // we can't use `web3.vap.sendTransaction` because it will obfuscate the result
       provider.send({
         jsonrpc: '2.0',
         id: new Date().getTime(),
-        method: 'eth_sendTransaction',
+        method: 'vap_sendTransaction',
         params: [{
           from: testState.accounts[0],
           to: testState.errorInstance.options.address,
@@ -119,7 +119,7 @@ function runTests(web3, provider, extraTests) {
       provider.send({
         jsonrpc: '2.0',
         id: new Date().getTime(),
-        method: 'eth_call',
+        method: 'vap_call',
         params: [{
           from: testState.accounts[0],
           to: testState.errorInstance.options.address,
@@ -150,7 +150,7 @@ function runTests(web3, provider, extraTests) {
       provider.send({
         jsonrpc: '2.0',
         id: new Date().getTime(),
-        method: 'eth_call',
+        method: 'vap_call',
         params: [{
           from: testState.accounts[0],
           to: testState.errorInstance.options.address,
@@ -202,7 +202,7 @@ describe("Runtime Errors with vmErrorsOnRPCResponse = true:", function() {
       provider.send({
         jsonrpc: '2.0',
         id: new Date().getTime(),
-        method: 'eth_sendTransaction',
+        method: 'vap_sendTransaction',
         params: [{
           from: testState.accounts[0],
           to: testState.errorInstance.options.address,

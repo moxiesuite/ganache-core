@@ -1,4 +1,4 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var Ganache = require("../index.js");
 var assert = require('assert-match');
 var regex = require('assert-match/matchers').regex;
@@ -9,12 +9,12 @@ var tests = function(web3) {
   // The second request, after the first in each of these tests,
   // informs us whether or not the provider crashed.
   function secondRequest(callback) {
-    web3.eth.getAccounts(callback);
+    web3.vap.getAccounts(callback);
   }
 
   describe("bad input", function() {
     before(function(done) {
-      web3.eth.getAccounts(function(err, accs) {
+      web3.vap.getAccounts(function(err, accs) {
         if (err) return done(err);
         accounts = accs;
         done();
@@ -26,7 +26,7 @@ var tests = function(web3) {
 
       provider.send({
         "jsonrpc": "2.0",
-        "method": "eth_sendTransaction",
+        "method": "vap_sendTransaction",
         "params": [
           {
             "value": "0x0",
@@ -54,7 +54,7 @@ var tests = function(web3) {
 
       var request = {
         "jsonrpc": "2.0",
-        "method": "eth_sendTransaction",
+        "method": "vap_sendTransaction",
         "params": [
           {
             "value": "0x10000000",
@@ -84,7 +84,7 @@ var tests = function(web3) {
 
       var request = {
         "jsonrpc": "2.0",
-        "method": "eth_sendTransaction",
+        "method": "vap_sendTransaction",
         "params": [
           {
             "value": "0x10000000",
@@ -111,14 +111,14 @@ var tests = function(web3) {
     });
 
     it("recovers after bad balance", function(done) {
-      web3.eth.getBalance(accounts[0], function(err, balance) {
+      web3.vap.getBalance(accounts[0], function(err, balance) {
         if (err) return done(err);
 
         var provider = web3.currentProvider;
 
         var request = {
           "jsonrpc": "2.0",
-          "method": "eth_sendTransaction",
+          "method": "vap_sendTransaction",
           "params": [
             {
               "value": "0x1000000000000000000000000000",

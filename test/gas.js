@@ -1,4 +1,4 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var assert = require('assert');
 var Ganache = require("../index.js");
 var fs = require("fs");
@@ -18,7 +18,7 @@ describe("Gas", function() {
   var accounts;
 
   before("get accounts", function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
       accounts = accs;
       done();
@@ -37,7 +37,7 @@ describe("Gas", function() {
       var estimateGasContractAbi = JSON.parse(result.contracts["EstimateGas.sol:EstimateGas"].interface);
 
       estimateGasContractData = "0x" + result.contracts["EstimateGas.sol:EstimateGas"].bytecode;
-      EstimateGasContract = new web3.eth.Contract(estimateGasContractAbi);
+      EstimateGasContract = new web3.vap.Contract(estimateGasContractAbi);
     });
 
     async function deployContract(){
@@ -46,7 +46,7 @@ describe("Gas", function() {
       .then(function(instance) {
         // TODO: ugly workaround - not sure why this is necessary.
         if (!instance._requestManager.provider) {
-          instance._requestManager.setProvider(web3.eth._provider);
+          instance._requestManager.setProvider(web3.vap._provider);
         }
         return instance;
       });
@@ -131,7 +131,7 @@ describe("Gas", function() {
       estimateGasContractData = "0x" + result.contracts["EstimateGas.sol:EstimateGas"].bytecode;
       estimateGasContractAbi = JSON.parse(result.contracts["EstimateGas.sol:EstimateGas"].interface);
 
-      EstimateGasContract = new web3.eth.Contract(estimateGasContractAbi);
+      EstimateGasContract = new web3.vap.Contract(estimateGasContractAbi);
       return EstimateGasContract.deploy({data: estimateGasContractData})
         .send({from: accounts[0], gas: 3141592})
         .on('receipt', function (receipt) {
@@ -140,7 +140,7 @@ describe("Gas", function() {
         .then(function(instance) {
           // TODO: ugly workaround - not sure why this is necessary.
           if (!instance._requestManager.provider) {
-            instance._requestManager.setProvider(web3.eth._provider);
+            instance._requestManager.setProvider(web3.vap._provider);
           }
           estimateGasInstance = instance;
         });
@@ -168,7 +168,7 @@ describe("Gas", function() {
     }
 
     it("matches estimate for deployment", function() {
-      let contract = new web3.eth.Contract(estimateGasContractAbi);
+      let contract = new web3.vap.Contract(estimateGasContractAbi);
       contract.deploy({ data: estimateGasContractData })
         .estimateGas({ from: accounts[1]})
         .then(function(gasEstimate) {
@@ -205,7 +205,7 @@ describe("Gas", function() {
 
       expectedGasPrice = w3.utils.toBN(expectedGasPrice)
 
-      return w3.eth.getBalance(accounts[0])
+      return w3.vap.getBalance(accounts[0])
         .then(balance => {
           initialBalance = w3.utils.toBN(balance)
 
@@ -219,11 +219,11 @@ describe("Gas", function() {
             params.gasPrice = expectedGasPrice
           }
 
-          return w3.eth.sendTransaction(params)
+          return w3.vap.sendTransaction(params)
         })
         .then(receipt => {
           gasUsed = w3.utils.toBN(receipt.gasUsed)
-          return w3.eth.getBalance(accounts[0])
+          return w3.vap.getBalance(accounts[0])
         })
         .then(balance => {
           let finalBalance = w3.utils.toBN(balance)
@@ -236,12 +236,12 @@ describe("Gas", function() {
           // gas expense is just gasPrice * gasUsed, so just solve accordingly
           let actualGasPrice = gasExpense.div(gasUsed)
 
-          assert(expectedGasPrice.eq(actualGasPrice), `Gas price used by EVM (${to.hex(actualGasPrice)}) was different from expected gas price (${to.hex(expectedGasPrice)})`)
+          assert(expectedGasPrice.eq(actualGasPrice), `Gas price used by VVM (${to.hex(actualGasPrice)}) was different from expected gas price (${to.hex(expectedGasPrice)})`)
         })
     }
       
     it('should calculate gas expenses correctly in consideration of the default gasPrice', function() {
-      return web3.eth.getGasPrice().then(testGasExpenseIsCorrect)
+      return web3.vap.getGasPrice().then(testGasExpenseIsCorrect)
     })
 
     it('should calculate gas expenses correctly in consideration of the requested gasPrice', function() {

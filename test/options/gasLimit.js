@@ -1,4 +1,4 @@
-const Web3 = require('web3');
+const Web3 = require('@vapory/web3');
 const assert = require('assert');
 const Ganache = require("../../index.js");
 const path = require("path");
@@ -17,12 +17,12 @@ describe('options:gasLimit', function() {
   })
 
   before('get accounts', async function() {
-    accounts = await web3.eth.getAccounts()
+    accounts = await web3.vap.getAccounts()
   })
 
   it('should respect the assigned gasLimit', async function() {
     let assignedGasLimit = provider.engine.manager.state.blockchain.blockGasLimit;
-    let block = await web3.eth.getBlock('latest')
+    let block = await web3.vap.getBlock('latest')
     assert.deepEqual(block.gasLimit, assignedGasLimit)
   })
 });

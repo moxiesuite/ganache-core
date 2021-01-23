@@ -67,7 +67,7 @@ describe("JSON-RPC Response", function() {
 
   var accounts;
   before(function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
       accounts = accs;
       done();
@@ -80,7 +80,7 @@ describe("JSON-RPC Response", function() {
   it.skip("should not have leading zeros in rpc quantity hex strings", function(done) {
     var request = {
       "jsonrpc": "2.0",
-      "method": "eth_getTransactionCount",
+      "method": "vap_getTransactionCount",
       "params": [
         accounts[0],
         "pending"
@@ -89,11 +89,11 @@ describe("JSON-RPC Response", function() {
     };
 
     provider.sendAsync(request, function(err, result) {
-      noLeadingZeros('eth_getTransactionCount', result);
+      noLeadingZeros('vap_getTransactionCount', result);
 
       request = {
         "jsonrpc": "2.0",
-        "method": "eth_sendTransaction",
+        "method": "vap_sendTransaction",
         "params": [
           {
             "from": accounts[0],
@@ -105,13 +105,13 @@ describe("JSON-RPC Response", function() {
       };
 
       provider.sendAsync(request, function() {
-        // Ignore eth_sendTransaction result, it returns the transaction hash.
+        // Ignore vap_sendTransaction result, it returns the transaction hash.
         // A transaction hash is a 'DATA' type, which can have leading zeroes
         // to pad it to an even string length (4 bit per char, so whole bytes).
 
         request = {
           "jsonrpc": "2.0",
-          "method": "eth_getTransactionCount",
+          "method": "vap_getTransactionCount",
           "params": [
             accounts[0],
             "pending"
@@ -120,7 +120,7 @@ describe("JSON-RPC Response", function() {
         };
 
         provider.sendAsync(request, function(err, result) {
-          noLeadingZeros('eth_getTransactionCount', result);
+          noLeadingZeros('vap_getTransactionCount', result);
           done();
         });
       });

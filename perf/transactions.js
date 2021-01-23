@@ -58,11 +58,11 @@ function bailIfError(err) {
 server.listen(port, function(err) {
   bailIfError(err);
 
-  web3.eth.getAccounts(function(err, accounts) {
+  web3.vap.getAccounts(function(err, accounts) {
     bailIfError(err);
 
     runAverage("Running transactions test", 4, 1000, function(n, cb) {
-      web3.eth.sendTransaction({
+      web3.vap.sendTransaction({
         from: accounts[0],
         to: accounts[1],
         value: 500, // wei

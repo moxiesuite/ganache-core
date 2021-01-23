@@ -1,4 +1,4 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var assert = require('assert');
 var Ganache = require("../index.js");
 var fs = require("fs");
@@ -10,7 +10,7 @@ var to = require("../lib/utils/to.js");
 // This removes solc's overzealous uncaughtException event handler.
 process.removeAllListeners("uncaughtException");
 
-describe("eth_call", function() {
+describe("vap_call", function() {
   var web3 = new Web3(Ganache.provider({}));
   var accounts;
   var estimateGasContractData;
@@ -21,7 +21,7 @@ describe("eth_call", function() {
   var source = fs.readFileSync(path.join(__dirname, "EstimateGas.sol"), "utf8");
 
   before("get accounts", function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
       accounts = accs;
       done();
@@ -35,7 +35,7 @@ describe("eth_call", function() {
     estimateGasContractData = "0x" + result.contracts["EstimateGas.sol:EstimateGas"].bytecode;
     estimateGasContractAbi = JSON.parse(result.contracts["EstimateGas.sol:EstimateGas"].interface);
 
-    EstimateGasContract = new web3.eth.Contract(estimateGasContractAbi);
+    EstimateGasContract = new web3.vap.Contract(estimateGasContractAbi);
     return EstimateGasContract.deploy({data: estimateGasContractData})
       .send({from: accounts[0], gas: 3141592})
       .on('receipt', function (receipt) {
@@ -44,7 +44,7 @@ describe("eth_call", function() {
       .then(function(instance) {
         // TODO: ugly workaround - not sure why this is necessary.
         if (!instance._requestManager.provider) {
-          instance._requestManager.setProvider(web3.eth._provider);
+          instance._requestManager.setProvider(web3.vap._provider);
         }
         estimateGasInstance = instance;
       });
