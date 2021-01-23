@@ -2,7 +2,7 @@ var Ganache = require("../index.js");
 var solc = require("solc");
 var to = require("../lib/utils/to.js");
 var async = require("async");
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var fs = require("fs");
 var assert = require("assert");
 
@@ -18,7 +18,7 @@ var logger = {
  * NOTE: Naming in these tests is a bit confusing. Here, the "main chain"
  * is the main chain the tests interact with; and the "forked chain" is the
  * chain that _was forked_. This is in contrast to general naming, where the
- * main chain represents the main chain to be forked (like the Ethereum live
+ * main chain represents the main chain to be forked (like the Vapory live
  * network) and the fork chaing being "the fork".
  */
 
@@ -67,7 +67,7 @@ describe("Forking using a Provider", function() {
   });
 
   before("Gather forked accounts", function(done) {
-    forkedWeb3.eth.getAccounts(function(err, f) {
+    forkedWeb3.vap.getAccounts(function(err, f) {
       if (err) return done(err);
       forkedAccounts = f;
       done();
@@ -75,7 +75,7 @@ describe("Forking using a Provider", function() {
   });
 
   before("Deploy initial contracts", function(done) {
-    forkedWeb3.eth.sendTransaction({
+    forkedWeb3.vap.sendTransaction({
       from: forkedAccounts[0],
       data: contract.binary,
       gas: 3141592
@@ -85,12 +85,12 @@ describe("Forking using a Provider", function() {
       // Save this for a later test.
       initialDeployTransactionHash = tx;
 
-      forkedWeb3.eth.getTransactionReceipt(tx, function(err, receipt) {
+      forkedWeb3.vap.getTransactionReceipt(tx, function(err, receipt) {
         if (err) return done(err);
 
         contractAddress = receipt.contractAddress;
 
-        forkedWeb3.eth.getCode(contractAddress, function(err, code) {
+        forkedWeb3.vap.getCode(contractAddress, function(err, code) {
           if (err) return done(err);
 
           // Ensure there's *something* there.
@@ -118,7 +118,7 @@ describe("Forking using a Provider", function() {
   // grab data from the forked chain when a provider instance is passed (instead of a URL). If this
   // one passes, it should follow that the rest of the forking features should work as normal.
   it("gets code correctly via the main chain (i.e., internally requests it from forked chain)", function(done) {
-    mainWeb3.eth.getCode(contractAddress, function(err, code) {
+    mainWeb3.vap.getCode(contractAddress, function(err, code) {
       if (err) return done(err);
 
       // Ensure there's *something* there.

@@ -1,6 +1,6 @@
-var Web3 = require('web3');
-var Transaction = require('ethereumjs-tx');
-var utils = require('ethereumjs-util');
+var Web3 = require('@vapory/web3');
+var Transaction = require('vaporyjs-tx');
+var utils = require('vaporyjs-util');
 var assert = require('assert');
 var Ganache = require("../index.js");
 var solc = require("solc");
@@ -39,7 +39,7 @@ describe("revert opcode", function() {
       runtimeBinary: '0x' + testContext.solcResult.contracts[":Revert"].runtimeBytecode
     };
 
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
 
       testContext.accounts = accs;
@@ -53,20 +53,20 @@ describe("revert opcode", function() {
     var revertAbi = JSON.parse(testContext.revertContract.abi);
     var callCount = 0;
 
-    var RevertContract = new web3.eth.Contract(revertAbi);
+    var RevertContract = new web3.vap.Contract(revertAbi);
     RevertContract._code = revertCode;
     return RevertContract.deploy({ data: revertCode })
       .send({from: testContext.accounts[0], gas: 3141592 })
       .then(function (instance) {
         // TODO: ugly workaround - not sure why this is necessary.
         if (!instance._requestManager.provider) {
-          instance._requestManager.setProvider(web3.eth._provider);
+          instance._requestManager.setProvider(web3.vap._provider);
         }
         return instance.methods.alwaysReverts(5).send({ from: testContext.accounts[0] })
       })
       .catch(function(err){
         assert.equal(err.results[err.hashes[0]].error, "revert", "Expected error result not returned.");
-        return web3.eth.getTransactionReceipt(err.hashes[0])
+        return web3.vap.getTransactionReceipt(err.hashes[0])
       })
       .then(function(receipt) {
         assert.notEqual(receipt, null, "Transaction receipt shouldn't be null");

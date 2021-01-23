@@ -3,7 +3,7 @@ var assert = require('assert-match');
 var matchers = require('assert-match/matchers');
 var gte = matchers.gte
 var lte = matchers.lte
-var Web3 = require("web3");
+var Web3 = require("@vapory/web3");
 
 describe('Time adjustment', function() {
   var startTime = new Date("Wed Aug 24 2016 00:00:00 GMT-0700 (PDT)");
@@ -30,7 +30,7 @@ describe('Time adjustment', function() {
   };
 
   before('get current time', function(done) {
-    web3.eth.getBlock('latest', function(err, block){
+    web3.vap.getBlock('latest', function(err, block){
       if(err) return done(err)
       timestampBeforeJump = block.timestamp
       done()
@@ -38,7 +38,7 @@ describe('Time adjustment', function() {
   })
 
   it('should mine the first block at the time provided', function(done) {
-    web3.eth.getBlock(0, function(err, result) {
+    web3.vap.getBlock(0, function(err, result) {
       // give ourselves a 25ms window for this to succeed
       let acceptableStartTime = startTime / 1000 | 0;
       let acceptableEndTime = acceptableStartTime + 25;
@@ -51,14 +51,14 @@ describe('Time adjustment', function() {
   it('should jump 5 hours', function(done) {
     this.timeout(5000) // this is timing out on travis for some reason :-(
     // Adjust time
-    send("evm_increaseTime", [secondsToJump], function(err, result) {
+    send("vvm_increaseTime", [secondsToJump], function(err, result) {
       if (err) return done(err);
 
       // Mine a block so new time is recorded.
-      send("evm_mine", function(err, result) {
+      send("vvm_mine", function(err, result) {
         if (err) return done(err);
 
-        web3.eth.getBlock('latest', function(err, block){
+        web3.vap.getBlock('latest', function(err, block){
           if(err) return done(err)
           var secondsJumped = block.timestamp - timestampBeforeJump
 

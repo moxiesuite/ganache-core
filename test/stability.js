@@ -1,9 +1,9 @@
 var BN = require('bn.js');
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var assert = require('assert-match');
 var matchers = require('assert-match/matchers');
 var Ganache = require("../index.js");
-var utils = require('ethereumjs-util');
+var utils = require('vaporyjs-util');
 var pify = require('pify');
 
 var regex = matchers.regex
@@ -28,7 +28,7 @@ describe("stability", function(done) {
   });
 
   before(function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
 
       accounts = accs;
@@ -54,10 +54,10 @@ describe("stability", function(done) {
 
     // Fire off transaction at once
     for (var i = 0; i < expected; i++) {
-      web3.eth.sendTransaction({
+      web3.vap.sendTransaction({
         from: accounts[0],
         to: accounts[1],
-        value: web3.utils.toWei(new BN(1), "ether")
+        value: web3.utils.toWei(new BN(1), "vapor")
       }, txHandler);
     }
   });
@@ -69,10 +69,10 @@ describe("stability", function(done) {
     var request = []
 
     for (var i = 0; i < expected; i++) {
-      let req = web3.eth.sendTransaction.request({
+      let req = web3.vap.sendTransaction.request({
         from: accounts[0],
         to: accounts[1],
-        value: web3.utils.toWei(new BN(1), "ether")
+        value: web3.utils.toWei(new BN(1), "vapor")
       })
 
       req.jsonrpc = '2.0'
@@ -94,11 +94,11 @@ describe("stability", function(done) {
     provider.send({
       jsonrpc: 2.0,
       id: 123,
-      method: 'eth_sendTransaction',
+      method: 'vap_sendTransaction',
       params:[{
         from: accounts[0],
         to: '0x123', //bad address
-        value: '1000000000000000000' // 1 ETH
+        value: '1000000000000000000' // 1 VAP
       }]
     }, function(err, result) {
       assert.notEqual(err, undefined)
@@ -108,11 +108,11 @@ describe("stability", function(done) {
   })
 
   it('should not crash when receiving a request with too many arguments', function() {
-    // At time of writing, `evm_mine` takes 0 arguments
+    // At time of writing, `vvm_mine` takes 0 arguments
     return pify(provider.send)({
       jsonrpc: 2.0,
       id: 123,
-      method: 'evm_mine',
+      method: 'vvm_mine',
       params:[
         '0x1',
         '0x2',
@@ -127,7 +127,7 @@ describe("stability", function(done) {
         // 10 oughtta do it!
       ]
     }).catch(err => {
-      assert.deepEqual(err.message, regex(/Method \'evm_mine\' requires exactly \d+ arguments/));
+      assert.deepEqual(err.message, regex(/Methood \'vvm_mine\' requires exactly \d+ arguments/));
     });// nothing to check from here, if the promise rejects, test fails
   })
 
@@ -144,7 +144,7 @@ describe("stability", function(done) {
     });
 
     before("get accounts", function(done) {
-      web3.eth.getAccounts(function(err, accs) {
+      web3.vap.getAccounts(function(err, accs) {
         if (err) return done(err);
 
         accounts = accs;
@@ -177,7 +177,7 @@ describe("stability", function(done) {
         blockchain.vm.stateManager.revert(function() { // processCall #1 finishes
           blockchain.latestBlock(function (err, latestBlock) { 
             blockchain.stateTrie.root = latestBlock.header.stateRoot; // getCode #1 (or any function with this logic)
-            web3.eth.call({}, function() {
+            web3.vap.call({}, function() {
               done();
             }); // processCall #2
           });

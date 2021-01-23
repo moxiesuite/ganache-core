@@ -1,5 +1,5 @@
 var BN = require('bn.js');
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var Ganache = require("../index.js");
 var assert = require('assert');
 var to = require("../lib/utils/to.js");
@@ -36,7 +36,7 @@ describe("Mining", function() {
   beforeEach("checkpoint, so that we can revert later", function(done) {
     web3.currentProvider.send({
       jsonrpc: "2.0",
-      method: "evm_snapshot",
+      method: "vvm_snapshot",
       id: new Date().getTime()
     }, function(err, res) {
       if (!err) {
@@ -49,7 +49,7 @@ describe("Mining", function() {
   afterEach("revert back to checkpoint", function(done) {
     web3.currentProvider.send({
       jsonrpc: "2.0",
-      method: "evm_revert",
+      method: "vvm_revert",
       params: [snapshot_id],
       id: new Date().getTime()
     }, done);
@@ -58,7 +58,7 @@ describe("Mining", function() {
   // Everything's a Promise to add in readibility.
   function getBlockNumber() {
     return new Promise(function(accept, reject) {
-      web3.eth.getBlockNumber(function(err, number) {
+      web3.vap.getBlockNumber(function(err, number) {
         if (err) return reject(err);
         accept(to.number(number));
       });
@@ -96,7 +96,7 @@ describe("Mining", function() {
     return new Promise(function(accept, reject) {
       web3.currentProvider.send({
         jsonrpc: "2.0",
-        method: "eth_mining",
+        method: "vap_mining",
         id: new Date().getTime()
       }, function(err, res) {
         if (err) return reject(err);
@@ -109,7 +109,7 @@ describe("Mining", function() {
     return new Promise(function(accept, reject) {
       web3.currentProvider.send({
         jsonrpc: "2.0",
-        method: "evm_mine",
+        method: "vvm_mine",
         id: new Date().getTime()
       }, function(err, result) {
         if (err) return reject(err);
@@ -121,7 +121,7 @@ describe("Mining", function() {
 
   function queueTransaction(from, to, gasLimit, value, data) {
     return new Promise(function(accept, reject) {
-      web3.eth.sendTransaction({
+      web3.vap.sendTransaction({
         from: from,
         to: to,
         gas: gasLimit,
@@ -136,7 +136,7 @@ describe("Mining", function() {
 
   function getReceipt(tx) {
     return new Promise(function(accept, reject) {
-      web3.eth.getTransactionReceipt(tx, function(err, result) {
+      web3.vap.getTransactionReceipt(tx, function(err, result) {
         if (err) return reject(err);
         accept(result);
       });
@@ -145,7 +145,7 @@ describe("Mining", function() {
 
   function getCode(address) {
     return new Promise(function(accept, reject) {
-      web3.eth.getCode(address, function(err, result) {
+      web3.vap.getCode(address, function(err, result) {
         if (err) return reject(err);
         accept(result);
       });
@@ -160,7 +160,7 @@ describe("Mining", function() {
   };
 
   before(function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
       accounts = accs;
       done();
@@ -174,14 +174,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(2), "ether"));
+      return queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(2), "vapor"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(3), "ether"));
+      return queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(3), "vapor"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -216,14 +216,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "vapor"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "vapor"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -257,14 +257,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "vapor"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "vapor"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -288,7 +288,7 @@ describe("Mining", function() {
 
   it("should error if queued transaction exceeds the block gas limit", function() {
     return stopMining().then(function() {
-      return queueTransaction(accounts[0], accounts[1], 10000000, web3.utils.toWei(new BN(2), "ether"));
+      return queueTransaction(accounts[0], accounts[1], 10000000, web3.utils.toWei(new BN(2), "vapor"));
     }).then(function(tx) {
       // It should never get here.
       throw new Error("Transaction was processed without erroring; gas limit should have been too high");
@@ -307,7 +307,7 @@ describe("Mining", function() {
       // This transaction should be processed immediately.
       return queueTransaction(accounts[0], null, 3141592, 0, badBytecode);
     }).then(function(tx) {
-      throw new Error("Execution should never get here as we expected `eth_sendTransaction` to throw an error")
+      throw new Error("Execution should never get here as we expected `vap_sendTransaction` to throw an error")
     }).catch(function(err) {
       if (err.message.indexOf("VM Exception while processing transaction") != 0) {
         return done(new Error("Received error we didn't expect: " + err));
@@ -317,7 +317,7 @@ describe("Mining", function() {
     });
   });
 
-  it("should error via evm_mine when queued transaction throws a runtime errors", function(done) {
+  it("should error via vvm_mine when queued transaction throws a runtime errors", function(done) {
     var tx1, tx2, blockNumber, bytecode, address;
 
     stopMining().then(function() {
@@ -326,7 +326,7 @@ describe("Mining", function() {
       tx1 = tx;
       return mineSingleBlock();
     }).then(function() {
-      throw new Error("Execution should never get here as we expected `evm_mine` to throw an error")
+      throw new Error("Execution should never get here as we expected `vvm_mine` to throw an error")
     }).catch(function(err) {
       if (err.message.indexOf("VM Exception while processing transaction") != 0) {
         return done(new Error("Received error we didn't expect: " + err));
@@ -336,7 +336,7 @@ describe("Mining", function() {
     });
   });
 
-  it("should error via evm_mine when multiple queued transactions throw runtime errors in a single block", function(done) {
+  it("should error via vvm_mine when multiple queued transactions throw runtime errors in a single block", function(done) {
     var tx1, tx2, blockNumber, bytecode;
 
     // Note: The two transactions queued in this test do not exceed the block gas limit
@@ -349,7 +349,7 @@ describe("Mining", function() {
     }).then(function(tx) {
       return mineSingleBlock();
     }).then(function() {
-      throw new Error("Execution should never get here as we expected `evm_mine` to throw an error")
+      throw new Error("Execution should never get here as we expected `vvm_mine` to throw an error")
     }).catch(function(err) {
       if (err.message.indexOf("Multiple VM Exceptions while processing transactions") != 0) {
         return done(new Error("Received error we didn't expect: " + err));
@@ -420,7 +420,7 @@ describe("Mining", function() {
     });
   });
 
-  it("should return the correct value for eth_mining when miner started and stopped", function() {
+  it("should return the correct value for vap_mining when miner started and stopped", function() {
     return stopMining().then(function() {
       return checkMining();
     }).then(function(is_mining) {
