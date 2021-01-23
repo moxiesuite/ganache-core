@@ -76,14 +76,14 @@
     "request": "^2.88.0",
     "solc": "0.4.24",
     "temp": "0.8.3",
-    "@vapory/web3": "1.0.0-beta.35",
+    "@vapory/web3": "1.0.0-beta.28",
     "webpack": "4.17.1",
     "webpack-bundle-size-analyzer": "2.7.0",
     "webpack-cli": "3.1.0"
   },
   "optionalDependencies": {
     "vaporyjs-wallet": "0.6.0",
-    "@vapory/web3": "1.0.0-beta.35"
+    "@vapory/web3": "1.0.0-beta.28"
   },
   "repository": {
     "type": "git",
