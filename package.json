@@ -1,7 +1,7 @@
 {
   "name": "@moxiesuite/ganache-core",
   "namespace": "moxiesuite",
-  "version": "2.1.0-a",
+  "version": "2.1.0-b",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
@@ -21,7 +21,7 @@
     "vaporyjs-block": "1.2.2",
     "vaporyjs-tx": "1.2.0",
     "vaporyjs-util": "5.1.5",
-    "vaporyjs-vm": "2.3.5",
+    "vaporyjs-vm": "2.3.3-a",
     "vaporyjs-wallet": "0.6.0",
     "fake-merkle-patricia-tree": "~1.0.1",
     "heap": "~0.2.6",
@@ -40,7 +40,7 @@
     "temp": "^0.8.3",
     "tmp": "0.0.31",
     "@vapory/web3": "1.0.0-beta.28",
-    "@vapormask/web3-provider-engine": "13.6.5",
+    "@vapormask/web3-provider-engine": "13.6.5-a",
     "websocket": "^1.0.24",
     "yargs": "^7.0.2"
   },

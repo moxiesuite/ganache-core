@@ -1192,7 +1192,7 @@ var logger = {
 };
 
 describe("Provider:", function() {
-  var Web3 = require('@vapory/wweb3');
+  var Web3 = require('@vapory/web3');
   var web3 = new Web3();
   web3.setProvider(Ganache.provider({
     logger: logger,
@@ -1209,7 +1209,7 @@ describe("Provider:", function() {
 });
 
 describe("HTTP Server:", function(done) {
-  var Web3 = require('@vapory/wweb3');
+  var Web3 = require('@vapory/web3');
   var web3 = new Web3();
   var port = 12345;
   var server;
@@ -1235,7 +1235,7 @@ describe("HTTP Server:", function(done) {
 });
 
 describe("WebSockets Server:", function(done) {
-  var Web3 = require('@vapory/wweb3');
+  var Web3 = require('@vapory/web3');
   var web3 = new Web3();
   var port = 12345;
   var server;
@@ -1248,7 +1248,7 @@ describe("WebSockets Server:", function(done) {
     });
     server.listen(port, function(err) {
       var provider = new Web3WsProvider("ws://localhost:" + port);
-  var Web3 = require('@vapory/wweb3');
+  var Web3 = require('@vapory/web3');
       web3.setProvider(provider);
       done();
     });
