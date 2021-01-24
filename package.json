@@ -1,7 +1,7 @@
 {
   "name": "@moxiesuite/ganache-core",
   "namespace": "moxiesuite",
-  "version": "2.1.0",
+  "version": "2.1.0-a",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
