@@ -1,7 +1,8 @@
 var BN = require('bn.js');
-var Web3 = require('@vapory/web3');
+var Web3 = require('@vapory/web3/src/index');
 var Ganache = require("../index.js");
-var assert = require('assert');
+var chai = require('chai');
+var assert = chai.assert;
 
 describe("Accounts", function() {
   var expected_address = "0x604a95C9165Bc95aE016a5299dd7d400dDDBEa9A";
@@ -10,13 +11,19 @@ describe("Accounts", function() {
   it("should respect the BIP99 mnemonic", function(done) {
     var web3 = new Web3();
     web3.setProvider(Ganache.provider({
-      mnemonic: mnemonic,
+      mnemonic: mnemonic
     }));
-
+    /*var g = new Ganache.provider({
+      mnemonic: "into trim cross then helmet popular suit hammer cart shrug oval student"
+    });console.log(g);
+    if (web3.setProvider(g)){ console.log('success'); } else { console.log('failure') }
+    web3.vap.getAccounts().then(e => console.log(e));*/
+    
     web3.vap.getAccounts(function(err, accounts) {
+      console.log(accounts);
       if (err) return done(err);
 
-      assert(accounts[0].toLowerCase(), expected_address.toLowerCase());
+      assert.equal(accounts[0].toLowerCase(), expected_address.toLowerCase());
       done();
     });
   });

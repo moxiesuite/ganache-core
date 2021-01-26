@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var TestRPC = require("../");
 var Web3 = require("@vapory/web3");
-var async = require("async")
+var async = require("async");
 
 var server = TestRPC.server();
 var port = 12345;

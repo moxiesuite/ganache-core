@@ -1,5 +1,5 @@
 var BN = require('bn.js');
-var Web3 = require('@vapory/web3');
+var Web3 = require('@vapory/web3/src/index');
 var assert = require('assert-match');
 var matchers = require('assert-match/matchers');
 var Ganache = require("../index.js");

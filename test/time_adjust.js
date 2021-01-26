@@ -1,8 +1,8 @@
 var Ganache = require("../index.js");
 var assert = require('assert-match');
 var matchers = require('assert-match/matchers');
-var gte = matchers.gte
-var lte = matchers.lte
+var gte = matchers.gte;
+var lte = matchers.lte;
 var Web3 = require("@vapory/web3");
 
 describe('Time adjustment', function() {

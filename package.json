@@ -1,13 +1,14 @@
 {
   "name": "@moxiesuite/ganache-core",
   "namespace": "moxiesuite",
-  "version": "2.1.0-b",
+  "version": "2.1.0-c",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "test-debug": "mocha --inspect-brk"
   },
   "dependencies": {
     "abstract-leveldown": "^3.0.0",
@@ -15,7 +16,7 @@
     "bip39": "~2.4.0",
     "bn.js": "4.11.6",
     "cachedown": "^1.0.0",
-    "chai": "^3.5.0",
+    "chai": "^4.0.0",
     "clone": "^2.1.1",
     "vaporyjs-account": "2.0.3",
     "vaporyjs-block": "1.2.2",
@@ -27,7 +28,7 @@
     "heap": "~0.2.6",
     "js-scrypt": "^0.2.0",
     "level-sublevel": "^6.6.1",
-    "levelup": "4.4.0",
+    "levelup": "^1.1.0",
     "localstorage-down": "^0.6.7",
     "lodash": "^4.17.5",
     "@vaporyjs/merkle-patricia-tree": "2.1.2",
@@ -39,8 +40,8 @@
     "solc": "0.4.18",
     "temp": "^0.8.3",
     "tmp": "0.0.31",
-    "@vapory/web3": "1.0.0-beta.28",
-    "@vapormask/web3-provider-engine": "13.6.5-a",
+    "@vapory/web3": "1.0.0-gamma.30",
+    "@vapormask/web3-provider-engine": "13.8.0",
     "websocket": "^1.0.24",
     "yargs": "^7.0.2"
   },

@@ -1,4 +1,4 @@
-var Web3 = require('@vapory/web3');
+var Web3 = require('@vapory/web3/src/index');
 var Ganache = require("../index.js");
 var assert = require('assert');
 

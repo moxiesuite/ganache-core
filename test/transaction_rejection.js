@@ -4,7 +4,7 @@ var Ganache = require("../index.js");
 var fs = require("fs");
 var path = require("path");
 var solc = require("solc");
-var to = require("../lib/utils/to")
+var to = require("../lib/utils/to");
 
 // Thanks solc. At least this works!
 // This removes solc's overzealous uncaughtException event handler.

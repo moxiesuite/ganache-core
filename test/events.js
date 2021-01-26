@@ -4,7 +4,7 @@ var Ganache = require("../index.js");
 var assert = require('assert');
 var solc = require("solc");
 var async = require("async");
-var util = require("util")
+var util = require("util");
 
 var source = "                      \
 pragma solidity ^0.4.2;             \
