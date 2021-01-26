@@ -127,7 +127,8 @@ describe("stability", function(done) {
         // 10 oughtta do it!
       ]
     }).catch(err => {
-      assert.deepEqual(err.message, regex(/Methood \'vvm_mine\' requires exactly \d+ arguments/));
+      //assert.deepEqual(err.message, regex(/Methood \'vvm_mine\' requires exactly \d+ arguments/));
+      assert.deepEqual(err.message, "Incorrect number of arguments. Method \'vvm_mine\' requires exactly 0 arguments. Request specified 10 arguments: [\"0x1\",\"0x2\",\"0x3\",\"0x4\",\"0x5\",\"0x6\",\"0x7\",\"0x8\",\"0x9\",\"0xA\",null].");
     });// nothing to check from here, if the promise rejects, test fails
   })
 
