@@ -1,7 +1,7 @@
 {
   "name": "@moxiesuite/ganache-core",
   "namespace": "moxiesuite",
-  "version": "2.1.0-d",
+  "version": "2.1.0-e",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
@@ -40,7 +40,7 @@
     "@vapory/solc": "0.4.19",
     "temp": "^0.8.3",
     "tmp": "0.0.31",
-    "@vapory/web3": "1.0.0-gamma.30",
+    "@vapory/web3": "1.0.0-delta.30",
     "@vapormask/web3-provider-engine": "13.8.0",
     "websocket": "^1.0.24",
     "yargs": "^7.0.2"
