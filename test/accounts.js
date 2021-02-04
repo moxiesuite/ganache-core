@@ -12,7 +12,7 @@ describe("Accounts", function() {
       mnemonic: mnemonic
     }));
 
-    web3.eth.getAccounts(function(err, accounts) {
+    web3.vap.getAccounts(function(err, accounts) {
       if (err) return done(err);
 
       assert(accounts[0].toLowerCase(), expected_address.toLowerCase());
@@ -27,7 +27,7 @@ describe("Accounts", function() {
       secure: true
     }));
 
-    web3.eth.sendTransaction({
+    web3.vap.sendTransaction({
       from: expected_address,
       to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
       value: web3.toWei(1, "Ether"),
@@ -47,7 +47,7 @@ describe("Accounts", function() {
       unlocked_accounts: [expected_address]
     }));
 
-    web3.eth.sendTransaction({
+    web3.vap.sendTransaction({
       from: expected_address,
       to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
       value: web3.toWei(1, "Ether"),
@@ -67,7 +67,7 @@ describe("Accounts", function() {
       unlocked_accounts: [0]
     }));
 
-    web3.eth.sendTransaction({
+    web3.vap.sendTransaction({
       from: expected_address,
       to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
       value: web3.toWei(1, "Ether"),
@@ -89,8 +89,8 @@ describe("Accounts", function() {
       unlocked_accounts: [0, second_address]
     }));
 
-    // Set up: give second address some ether
-    web3.eth.sendTransaction({
+    // Set up: give second address some vapor
+    web3.vap.sendTransaction({
       from: expected_address,
       to: second_address,
       value: web3.toWei(10, "Ether"),
@@ -99,7 +99,7 @@ describe("Accounts", function() {
       if (err) return done(err);
 
       // Now we should be able to send a transaction from second address without issue.
-      web3.eth.sendTransaction({
+      web3.vap.sendTransaction({
         from: second_address,
         to: expected_address,
         value: web3.toWei(5, "Ether"),
@@ -108,12 +108,12 @@ describe("Accounts", function() {
         if (err) return done(err);
 
         // And for the heck of it let's check the balance just to make sure it went througj
-        web3.eth.getBalance(second_address, function(err, balance) {
+        web3.vap.getBalance(second_address, function(err, balance) {
           if (err) return done(err);
 
           var balanceInEther = web3.fromWei(balance, "Ether");
 
-          // Can't check the balance exactly. It cost some ether to send the transaction.
+          // Can't check the balance exactly. It cost some vapor to send the transaction.
           assert(balanceInEther.gt(4));
           assert(balanceInEther.lt(5));
           done();
@@ -132,7 +132,7 @@ describe("Accounts", function() {
       unlocked_accounts: [0, second_address]
     }));
 
-    web3.eth.sign(second_address, "some data", function(err, result) {
+    web3.vap.sign(second_address, "some data", function(err, result) {
       if (!err) return done(new Error("Expected an error while signing when not managing the private key"));
 
       assert(err.message.toLowerCase().indexOf("cannot sign data; no private key") >= 0);
@@ -150,7 +150,7 @@ describe("Accounts", function() {
       ]
     }));
 
-    web3.eth.getAccounts(function(err, result) {
+    web3.vap.getAccounts(function(err, result) {
       if (err) return done(err);
       assert(result.length, 2, "The number of accounts created should be 2");
       done();
@@ -164,7 +164,7 @@ describe("Accounts", function() {
       total_accounts: 7
     }));
 
-    web3.eth.getAccounts(function(err, result) {
+    web3.vap.getAccounts(function(err, result) {
       if (err) return done(err);
       assert(result.length, 7, "The number of accounts created should be 7");
       done();

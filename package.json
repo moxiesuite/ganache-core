@@ -1,5 +1,6 @@
 {
-  "name": "ganache-core",
+  "name": "@moxiesuite/ganache-core",
+  "namespace": "moxiesuite",
   "version": "2.0.2",
   "main": "./index.js",
   "directories": {
@@ -14,12 +15,12 @@
     "cachedown": "^1.0.0",
     "chai": "^3.5.0",
     "clone": "^2.1.1",
-    "ethereumjs-account": "~2.0.4",
-    "ethereumjs-block": "~1.2.2",
-    "ethereumjs-tx": "^1.3.0",
-    "ethereumjs-util": "~5.1.0",
-    "ethereumjs-vm": "2.3.2",
-    "ethereumjs-wallet": "~0.6.0",
+    "vaporyjs-account": "~2.0.4",
+    "vaporyjs-block": "~1.2.2",
+    "vaporyjs-tx": "^1.3.0",
+    "vaporyjs-util": "~5.1.0",
+    "vaporyjs-vm": "2.3.2",
+    "vaporyjs-wallet": "~0.6.0",
     "fake-merkle-patricia-tree": "~1.0.1",
     "heap": "~0.2.6",
     "js-scrypt": "^0.2.0",
@@ -45,6 +46,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/trufflesuite/ganache-core"
+    "url": "https://github.com/moxiesuite/ganache-core"
   }
 }

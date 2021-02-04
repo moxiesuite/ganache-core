@@ -1,6 +1,6 @@
 var Web3 = require('web3');
-var Transaction = require('ethereumjs-tx');
-var utils = require('ethereumjs-util');
+var Transaction = require('vaporyjs-tx');
+var utils = require('vaporyjs-util');
 var assert = require('assert');
 var TestRPC = require("../index.js");
 var solc = require("solc");
@@ -40,7 +40,7 @@ describe("revert opcode", function() {
       runtimeBinary: '0x' + testContext.solcResult.contracts[":Revert"].runtimeBytecode
     };
 
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
 
       testContext.accounts = accs;
@@ -54,7 +54,7 @@ describe("revert opcode", function() {
     var revertAbi = JSON.parse(testContext.revertContract.abi);
     var callCount = 0;
 
-    var RevertContract = web3.eth.contract(revertAbi);
+    var RevertContract = web3.vap.contract(revertAbi);
     RevertContract._code = revertCode;
     RevertContract.new({ data: revertCode, from: testContext.accounts[0], gas: 3141592 }, function (err, instance) {
       callCount++;
@@ -67,7 +67,7 @@ describe("revert opcode", function() {
           assert(err, "Expected error result not returned.");
           var txHash = err.hashes[0];
 
-          web3.eth.getTransactionReceipt(txHash, function(err, receipt) {
+          web3.vap.getTransactionReceipt(txHash, function(err, receipt) {
             if (err) {
               return done(err);
             }

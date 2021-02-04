@@ -17,7 +17,7 @@ describe("Gas Estimation", function() {
   var source = fs.readFileSync(path.join(__dirname, "EstimateGas.sol"), "utf8");
 
   before("get accounts", function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
       accounts = accs;
       done();
@@ -31,7 +31,7 @@ describe("Gas Estimation", function() {
     var code = "0x" + result.contracts["EstimateGas.sol:EstimateGas"].bytecode;
     var abi = JSON.parse(result.contracts["EstimateGas.sol:EstimateGas"].interface);
 
-    EstimateGasContract = web3.eth.contract(abi);
+    EstimateGasContract = web3.vap.contract(abi);
     EstimateGasContract._code = code;
     EstimateGasContract.new({data: code, from: accounts[0], gas: 3141592}, function(err, instance) {
       if (err) return done(err);
@@ -45,7 +45,7 @@ describe("Gas Estimation", function() {
 
   function verifyGas(txHash, gasEstimate, done) {
     // Get the gas usage.
-    web3.eth.getTransactionReceipt(txHash, function(err, receipt) {
+    web3.vap.getTransactionReceipt(txHash, function(err, receipt) {
       if (err) return done(err);
 
       // When instamining, gasUsed and cumulativeGasUsed should be the same.
@@ -73,7 +73,7 @@ describe("Gas Estimation", function() {
   }
 
   it("matches estimate for deployment", function(done) {
-    web3.eth.estimateGas({ data: EstimateGasContract._code, from: accounts[0]}, function(err, gasEstimate) {
+    web3.vap.estimateGas({ data: EstimateGasContract._code, from: accounts[0]}, function(err, gasEstimate) {
       if (err) assert.fail(err);
 
       verifyGas(EstimateGas.transactionHash, gasEstimate, done);

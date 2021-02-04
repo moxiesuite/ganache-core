@@ -21,7 +21,7 @@ describe("TestRPC", function(done) {
   });
 
   before(function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
 
       accounts = accs;
@@ -49,10 +49,10 @@ describe("TestRPC", function(done) {
 
     // Fire off transaction at once
     for (var i = 0; i < expected; i++) {
-      web3.eth.sendTransaction({
+      web3.vap.sendTransaction({
         from: accounts[0],
         to: accounts[1],
-        value: web3.toWei(1, "ether")
+        value: web3.toWei(1, "vapor")
       }, txHandler);
     }
   });
@@ -78,10 +78,10 @@ describe("TestRPC", function(done) {
     var batch = web3.createBatch();
 
     for (var i = 0; i < expected; i++) {
-      batch.add(web3.eth.sendTransaction.request({
+      batch.add(web3.vap.sendTransaction.request({
         from: accounts[0],
         to: accounts[1],
-        value: web3.toWei(1, "ether")
+        value: web3.toWei(1, "vapor")
       }), txHandler);
     }
 

@@ -1,5 +1,5 @@
 var Web3 = require('web3');
-var utils = require('ethereumjs-util');
+var utils = require('vaporyjs-util');
 var assert = require('assert');
 var TestRPC = require("../index.js");
 
@@ -12,7 +12,7 @@ describe("Custom Gas Price", function() {
     var provider = TestRPC.provider({gasPrice: 15, logger: logger});
     var web3 = new Web3();
     web3.setProvider(provider);
-    web3.eth.getGasPrice(function(err, result) {
+    web3.vap.getGasPrice(function(err, result) {
       if (err) return done(err);
       assert.deepEqual(result.toNumber(), 15);
       done();
@@ -23,7 +23,7 @@ describe("Custom Gas Price", function() {
     var provider = TestRPC.provider({gasPrice: 0xf, logger: logger});
     var web3 = new Web3();
     web3.setProvider(provider);
-    web3.eth.getGasPrice(function(err, result) {
+    web3.vap.getGasPrice(function(err, result) {
       if (err) return done(err);
       assert.deepEqual(result.toNumber(), 15);
       done();

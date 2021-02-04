@@ -25,7 +25,7 @@ describe("Debug", function() {
   });
 
   before("get accounts", function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
       accounts = accs;
       done();
@@ -39,7 +39,7 @@ describe("Debug", function() {
     var code = "0x" + result.contracts["DebugContract.sol:DebugContract"].bytecode;
     var abi = JSON.parse(result.contracts["DebugContract.sol:DebugContract"].interface);
 
-    DebugContract = web3.eth.contract(abi);
+    DebugContract = web3.vap.contract(abi);
     DebugContract._code = code;
     DebugContract.new({data: code, from: accounts[0], gas: 3141592}, function(err, instance) {
       if (err) return done(err);

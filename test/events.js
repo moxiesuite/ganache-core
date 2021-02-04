@@ -25,7 +25,7 @@ var tests = function(web3, EventTest) {
 
   describe("events", function() {
     before(function(done) {
-      web3.eth.getAccounts(function(err, accs) {
+      web3.vap.getAccounts(function(err, accs) {
         if (err) return done(err);
         accounts = accs;
         done();
@@ -40,7 +40,7 @@ var tests = function(web3, EventTest) {
       }
 
       var abi = JSON.parse(result.contracts[":EventTest"].interface);
-      EventTest = web3.eth.contract(abi);
+      EventTest = web3.vap.contract(abi);
       EventTest._data = "0x" + result.contracts[":EventTest"].bytecode;
     });
 
@@ -196,7 +196,7 @@ var tests = function(web3, EventTest) {
         function(c) {
           provider.sendAsync({
             jsonrpc: "2.0",
-            method: "eth_newBlockFilter",
+            method: "vap_newBlockFilter",
             params: [],
             id: new Date().getTime()
           }, function(err, result) {
@@ -208,7 +208,7 @@ var tests = function(web3, EventTest) {
         function(c) {
           provider.sendAsync({
             jsonrpc: "2.0",
-            method: "eth_getFilterChanges",
+            method: "vap_getFilterChanges",
             params: [filter_id],
             id: new Date().getTime()
           }, function(err, result) {
@@ -220,7 +220,7 @@ var tests = function(web3, EventTest) {
         function(c) {
           provider.sendAsync({
             jsonrpc: "2.0",
-            method: "eth_getFilterChanges",
+            method: "vap_getFilterChanges",
             params: [filter_id],
             id: new Date().getTime()
           }, function(err, result) {

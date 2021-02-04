@@ -18,7 +18,7 @@ describe("Runtime Errors", function() {
   var code;
 
   before("get accounts", function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       if (err) return done(err);
       accounts = accs;
       done();
@@ -34,7 +34,7 @@ describe("Runtime Errors", function() {
     code = "0x" + result.contracts["RuntimeError.sol:RuntimeError"].bytecode;
     var abi = JSON.parse(result.contracts["RuntimeError.sol:RuntimeError"].interface);
 
-    ErrorContract = web3.eth.contract(abi);
+    ErrorContract = web3.vap.contract(abi);
     ErrorContract._code = code;
     ErrorContract.new({data: code, from: accounts[0], gas: 3141592}, function(err, instance) {
       if (err) return done(err);
@@ -59,10 +59,10 @@ describe("Runtime Errors", function() {
   });
 
   it("should output the transaction hash even if a runtime error occurs", function(done) {
-    // we can't use `web3.eth.sendTransaction` because it will obfuscate the result
+    // we can't use `web3.vap.sendTransaction` because it will obfuscate the result
     web3.currentProvider.sendAsync({
       jsonrpc: "2.0",
-      method: "eth_sendTransaction",
+      method: "vap_sendTransaction",
       params: [{
         from: accounts[0],
         data: code
