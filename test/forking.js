@@ -4,7 +4,7 @@ var utils = require('vaporyjs-util');
 var assert = require('assert');
 var Ganache = require("../index.js");
 var fs = require("fs");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var to = require("../lib/utils/to.js");
 var async = require("async");
 

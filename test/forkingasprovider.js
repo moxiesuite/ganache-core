@@ -1,5 +1,5 @@
 var Ganache = require("../index.js");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var to = require("../lib/utils/to.js");
 var async = require("async");
 var Web3 = require('@vapory/web3/src/index');

@@ -3,7 +3,7 @@ var Web3 = require('@vapory/web3');
 var Ganache = require("../index.js");
 var assert = require('assert');
 var to = require("../lib/utils/to.js");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 
 // Thanks solc. At least this works!
 // This removes solc's overzealous uncaughtException event handler.

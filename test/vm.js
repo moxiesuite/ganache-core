@@ -3,7 +3,7 @@ var Transaction = require('vaporyjs-tx');
 var utils = require('vaporyjs-util');
 var assert = require('assert');
 var Ganache = require("../index.js");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var fs = require("fs");
 var to = require("../lib/utils/to");
 

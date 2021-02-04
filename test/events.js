@@ -2,7 +2,7 @@ var Web3 = require('@vapory/web3');
 var Web3WsProvider = require('@vapory/web3-providers-ws');
 var Ganache = require("../index.js");
 var assert = require('assert');
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var async = require("async");
 var util = require("util");
 
