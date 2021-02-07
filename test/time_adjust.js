@@ -1,6 +1,6 @@
 var TestRPC = require("../index.js");
 var assert = require('assert');
-var Web3 = require("web3");
+var Web3 = require("@vapory/web3");
 
 describe('Time adjustment', function() {
   var startTime = new Date("Wed Aug 24 2016 00:00:00 GMT-0700 (PDT)");

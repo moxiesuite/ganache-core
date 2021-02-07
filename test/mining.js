@@ -1,8 +1,8 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var TestRPC = require("../index.js");
 var assert = require('assert');
 var to = require("../lib/utils/to.js");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 
 // Thanks solc. At least this works!
 // This removes solc's overzealous uncaughtException event handler.
@@ -169,14 +169,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 90000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 90000, web3.toWei(2, "Vapor"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 90000, web3.toWei(3, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 90000, web3.toWei(3, "Vapor"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -210,14 +210,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(2, "Vapor"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(3, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(3, "Vapor"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -250,14 +250,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(2, "Vapor"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(3, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(3, "Vapor"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -281,7 +281,7 @@ describe("Mining", function() {
 
   it("should error if queued transaction exceeds the block gas limit", function() {
     return stopMining().then(function() {
-      return queueTransaction(accounts[0], accounts[1], 10000000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 10000000, web3.toWei(2, "Vapor"));
     }).then(function(tx) {
       // It should never get here.
       throw new Error("Transaction was processed without erroring; gas limit should have been too high");

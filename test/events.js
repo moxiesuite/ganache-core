@@ -1,7 +1,7 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var TestRPC = require("../index.js");
 var assert = require('assert');
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var async = require("async");
 
 var source = "                      \

@@ -1,9 +1,9 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var assert = require('assert');
 var TestRPC = require("../index.js");
 var fs = require("fs");
 var path = require("path");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var RuntimeError = require("../lib/utils/runtimeerror");
 
 // Thanks solc. At least this works!

@@ -1,4 +1,4 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var TestRPC = require("../index.js");
 var assert = require('assert');
 
@@ -30,7 +30,7 @@ describe("Accounts", function() {
     web3.vap.sendTransaction({
       from: expected_address,
       to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
-      value: web3.toWei(1, "Ether"),
+      value: web3.toWei(1, "Vapor"),
       gasLimit: 90000
     }, function(err, tx) {
       if (!err) return done(new Error("We expected the account to be locked, which should throw an error when sending a transaction"));
@@ -50,7 +50,7 @@ describe("Accounts", function() {
     web3.vap.sendTransaction({
       from: expected_address,
       to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
-      value: web3.toWei(1, "Ether"),
+      value: web3.toWei(1, "Vapor"),
       gasLimit: 90000
     }, function(err, tx) {
       if (err) return done(err);
@@ -70,7 +70,7 @@ describe("Accounts", function() {
     web3.vap.sendTransaction({
       from: expected_address,
       to: "0x1234567890123456789012345678901234567890", // doesn't need to exist
-      value: web3.toWei(1, "Ether"),
+      value: web3.toWei(1, "Vapor"),
       gasLimit: 90000
     }, function(err, tx) {
       if (err) return done(err);
@@ -93,7 +93,7 @@ describe("Accounts", function() {
     web3.vap.sendTransaction({
       from: expected_address,
       to: second_address,
-      value: web3.toWei(10, "Ether"),
+      value: web3.toWei(10, "Vapor"),
       gasLimit: 90000
     }, function(err, tx) {
       if (err) return done(err);
@@ -102,7 +102,7 @@ describe("Accounts", function() {
       web3.vap.sendTransaction({
         from: second_address,
         to: expected_address,
-        value: web3.toWei(5, "Ether"),
+        value: web3.toWei(5, "Vapor"),
         gasLimit: 90000
       }, function(err, tx) {
         if (err) return done(err);
@@ -111,11 +111,11 @@ describe("Accounts", function() {
         web3.vap.getBalance(second_address, function(err, balance) {
           if (err) return done(err);
 
-          var balanceInEther = web3.fromWei(balance, "Ether");
+          var balanceInVapor = web3.fromWei(balance, "Vapor");
 
           // Can't check the balance exactly. It cost some vapor to send the transaction.
-          assert(balanceInEther.gt(4));
-          assert(balanceInEther.lt(5));
+          assert(balanceInVapor.gt(4));
+          assert(balanceInVapor.lt(5));
           done();
         });
       });

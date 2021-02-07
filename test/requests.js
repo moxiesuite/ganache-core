@@ -1,9 +1,9 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var Transaction = require('vaporyjs-tx');
 var utils = require('vaporyjs-util');
 var assert = require('assert');
 var TestRPC = require("../index.js");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var fs = require("fs");
 var to = require("../lib/utils/to");
 var clone = require("clone");
@@ -156,7 +156,6 @@ var tests = function(web3) {
     it("should return block given the block number", function(done) {
       web3.vap.getBlock(0, true, function(err, block) {
         if (err) return done(err);
-
         var expectedFirstBlock = {
           number: 0,
           hash: block.hash, // Don't test this one
@@ -172,7 +171,7 @@ var tests = function(web3) {
           totalDifficulty: { s: 1, e: 0, c: [ 0 ] },
           extraData: '0x0',
           size: 1000,
-          gasLimit: 6712390,
+          gasLimit: 6721975,
           gasUsed: 0,
           timestamp: block.timestamp, // Don't test this one.
           transactions: [],
@@ -342,8 +341,8 @@ var tests = function(web3) {
         if (err) return done(err);
 
     	  sgn = utils.stripHexPrefix(sgn);
-    		var r = new Buffer(sgn.slice(0, 64), 'hex');
-    		var s = new Buffer(sgn.slice(64, 128), 'hex');
+    		var r = Buffer.from(sgn.slice(0, 64), 'hex');
+    		var s = Buffer.from(sgn.slice(64, 128), 'hex');
     		var v = parseInt(sgn.slice(128, 130), 16) + 27;
     		var pub = utils.ecrecover(msgHash, v, r, s);
     		var addr = utils.setLength(utils.fromSigned(utils.pubToAddress(pub)), 20);
@@ -363,8 +362,8 @@ var tests = function(web3) {
         if (err) return done(err);
 
         sgn = utils.stripHexPrefix(sgn);
-        var r = new Buffer(sgn.slice(0, 64), 'hex');
-        var s = new Buffer(sgn.slice(64, 128), 'hex');
+        var r = Buffer.from(sgn.slice(0, 64), 'hex');
+        var s = Buffer.from(sgn.slice(64, 128), 'hex');
         var v = parseInt(sgn.slice(128, 130), 16) + 27;
         var pub = utils.ecrecover(msgHash, v, r, s);
         var addr = utils.setLength(utils.fromSigned(utils.pubToAddress(pub)), 20);
@@ -664,7 +663,7 @@ var tests = function(web3) {
         // Now double check the data was set properly.
         // NOTE: Because vaporyjs-testrpc processes transactions immediately,
         // we can do this. Calling the call immediately after the transaction would
-        // fail on a different Ethereum client.
+        // fail on a different Vapory client.
 
         web3.vap.getTransactionReceipt(tx, function(err, receipt) {
           if (err) return done(err);
@@ -730,7 +729,7 @@ var tests = function(web3) {
       data: contract.binary,
       gasLimit: to.hex(3141592)
     })
-    var privateKey = new Buffer('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
+    var privateKey = Buffer.from('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
     var senderAddress = '0x'+utils.privateToAddress(privateKey).toString('hex')
     tx.sign(privateKey)
     var rawTx = '0x'+tx.serialize().toString('hex')

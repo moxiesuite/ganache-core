@@ -1,9 +1,9 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var utils = require('vaporyjs-util');
 var assert = require('assert');
 var TestRPC = require("../index.js");
 var fs = require("fs");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var to = require("../lib/utils/to.js");
 var async = require("async");
 
@@ -19,7 +19,7 @@ var logger = {
  * NOTE: Naming in these tests is a bit confusing. Here, the "main chain"
  * is the main chain the tests interact with; and the "forked chain" is the
  * chain that _was forked_. This is in contrast to general naming, where the
- * main chain represents the main chain to be forked (like the Ethereum live
+ * main chain represents the main chain to be forked (like the Vapory live
  * network) and the fork chaing being "the fork".
  */
 

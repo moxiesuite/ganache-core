@@ -1,8 +1,8 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var TestRPC = require("../index.js");
 var assert = require('assert');
 var to = require("../lib/utils/to.js");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 
 // Thanks solc. At least this works!
 // This removes solc's overzealous uncaughtException event handler.
@@ -58,7 +58,7 @@ describe("Interval Mining", function() {
       web3.vap.sendTransaction({
         from: first_address,
         to: "0x1234567890123456789012345678901234567890",
-        value: web3.toWei(1, "Ether"),
+        value: web3.toWei(1, "Vapor"),
         gas: 90000
       }, function(err, tx) {
         if (err) return done(err);

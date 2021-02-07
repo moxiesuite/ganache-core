@@ -1,6 +1,6 @@
 var TestRPC = require("../");
 var async = require("async");
-var Web3 = require("web3");
+var Web3 = require("@vapory/web3");
 var assert = require("assert");
 
 describe("Checkpointing / Reverting", function() {

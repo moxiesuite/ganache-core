@@ -1,9 +1,9 @@
-var Web3 = require('web3');
+var Web3 = require('@vapory/web3');
 var TestRPC = require("../index.js");
 var assert = require('assert');
 var temp = require("temp").track();
 var fs = require("fs");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var memdown = require("memdown");
 
 // Thanks solc. At least this works!

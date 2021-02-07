@@ -17,7 +17,7 @@ This is the core code that powers the Ganache application and the the Ganache co
 
 
 ```Bash
-npm install ganache-core
+npm install @moxiesuite/ganache-core
 ```
 
 # USAGE
@@ -25,14 +25,14 @@ npm install ganache-core
 As a Web3 provider:
 
 ```javascript
-var Ganache = require("ganache-core");
+var Ganache = require("@moxiesuite/ganache-core");
 web3.setProvider(Ganache.provider());
 ```
 
 As a general http server:
 
 ```javascript
-var Ganache = require("ganache-core");
+var Ganache = require("@moxiesuite/ganache-core");
 var server = Ganache.server();
 server.listen(port, function(err, blockchain) {...});
 ```
